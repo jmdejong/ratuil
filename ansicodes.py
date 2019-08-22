@@ -87,7 +87,14 @@ class Style:
 		self.bold = bold
 	
 	def __eq__(self, other):
-		return isinstance(other, Style) and other.fg == fg and other.bg == bg and other.bold == bold
+		return isinstance(other, Style) and other.fg == self.fg and other.bg == self.bg and other.bold == self.bold
+	
+	def __repr__(self):
+		if self == Style.default:
+			return "Style()"
+		return "Style({}, {}, {})".format(self.fg, self.bg, self.bold)
+
+Style.default = Style()
 
 class Screen:
 	
@@ -162,9 +169,10 @@ class Screen:
 					skip = 0
 				style, char = cell
 				screen.style(style, last_style)
+				last_style = style
 				screen.write(char)
 
-class ScreenPad:
+class Pad:
 	
 	def __init__(self, width, height):
 		self.width = width
@@ -182,13 +190,14 @@ class ScreenPad:
 	def clear(self):
 		self.fill(None)
 	
-	def write(self, x, y, text, style=None):
+	def write(self, x, y, text, style=Style.default):
 		if y >= self.height:
 			return
 		for i, char in enumerate(text):
 			if x + i >= self.width:
 				break
 			self.data[x+i+y*self.width] = (style, char)
+	
 	
 	def get(self, x, y):
 		if y >= self.height or x >= self.width:
@@ -203,6 +212,15 @@ class ScreenPad:
 		start = x + y * self.width
 		return self.data[start:start+length]
 	
+	def draw_pad(self, src, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
+		dest = self
+		width = min(dest.width - dest_x, src.width - src_x)
+		height = min(dest.height - dest_y, src.height - src_y)
+		for y in range(height):
+			for x, cell in enumerate(src.get_line(src_x, y, width)):
+				if cell is not None:
+					style, char = cell
+					self.write(x, y, char, style)
 
 
 
@@ -212,15 +230,9 @@ class BufferedScreen:
 		self.out = out
 		self.screen = Screen(io.StringIO())
 		self.on_screen = Pad(self.screen.width, self.screen.height)
-		self.buff = Pad(self.screen.width, self.screen.height)
-	
-	def write(self, x, y, text, style=None):
-		self.buff.write(x, y, text, style)
 	
 	def clear(self):
 		self.on_screen = Pad(self.screen.width, self.screen.height)
-		#self.on_screen.fill(
-		self.buff = Pad(self.screen.width, self.screen.height)
 		self.screen.clear()
 	
 	def reset(self):
@@ -234,17 +246,27 @@ class BufferedScreen:
 	def redraw(self):
 		self.screen.clear()
 		self.screen.draw_pad(self.on_screen)
-		self.screen.draw_pad(self.buff)
 		self._do_write()
 	
-	def update(self):
+	def draw_pad(self, *args, **kwargs):
+		self.on_screen.draw_pad(*args, **kwargs)
+		self.screen.draw_pad(*args, **kwargs)
+		self._do_write()
+		
+	
+	def draw_pad_optimized(self, src, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
+		# Optimizes on the amount of characters to write to the terminal, which is more crucial in applications running over a network connection (like ssh)
+		# This will only draw the changed characters
+		width = min(self.screen.width - dest_x, src.width - src_x)
+		height = min(self.screen.height - dest_y, src.height - src_y)
+		
 		BEGIN = "BEGIN" # before anything on the line has been done
 		RUNNING = "RUNNING" # while changing current characters
 		POSTRUN = "POSTRUN" # after changing some characters. Unsure whether to jump to next place or just continue
 		POSTPOSTRUN = "POSTPOSTRUN" # same, but now the style has been changed
 		BETWEEN = "BETWEEN" # run finished, but not worth to continue. Looking for the next changes
 		last_style = None
-		for y in range(self.on_screen.height):
+		for y in range(height):
 			#runs = []
 			#current_run = None
 			running = False
@@ -254,14 +276,22 @@ class BufferedScreen:
 			post_style = None
 			extra = 0
 			
-			STATE = BEGIN
+			state = BEGIN
 			#last_style = None
 			#cursor_x = None
 			for x, (scr_cell, buff_cell) in enumerate(zip(
-					self.on_screen.get_line(0, y),
-					self.buff.get_line(0, y))):
-				
+					self.on_screen.get_line(dest_x, dest_y + y, width),
+					src.get_line(src_x, src_y + y, width))):
+				if scr_cell is None:
+					scr_cell = (None, None)
 				scr_style, scr_char = scr_cell
+				if buff_cell is None:
+					if state == BEGIN:
+						continue
+					if state == RUNNING:
+						cursor_x = x
+					state = BETWEEN
+					continue
 				buff_style, buff_char = buff_cell
 				while True:
 				
@@ -270,17 +300,17 @@ class BufferedScreen:
 							break
 						# start the first run
 						if state == BEGIN:
-							screen.move(x, y)
+							self.screen.move(dest_x + x, dest_y + y)
 						else:
-							screen.skip(x-cursor_x)
+							self.screen.skip(x-cursor_x)
 						state = RUNNING
 					
 					if state == RUNNING:
 						if scr_cell != buff_cell:
 							# continuing the same run
-							screen.style(buff_style, last_style)
+							self.screen.style(buff_style, last_style)
 							last_style = buff_style
-							screen.write(buff_char)
+							self.screen.write(buff_char)
 							break
 						cursor_x = x
 						state = POSTRUN
@@ -290,17 +320,18 @@ class BufferedScreen:
 					
 					if state == POSTRUN:
 						if buff_cell != scr_cell:
-							screen.write(post_run)
+							self.screen.write(post_run)
 							state = RUNNING
 						elif extra >= 4:
 							state = BETWEEN
 							break
 						elif buff_style == last_style:
 							extra += 1
-							post_run += buf_char
+							post_run += buff_char
 							break
 						else:
-							last_style = buf_style
+							before_last_style = last_style
+							last_style = buff_style
 							state = POSTPOSTRUN
 					
 					if state == POSTPOSTRUN:
@@ -308,35 +339,42 @@ class BufferedScreen:
 							state = BETWEEN
 							break
 						if buff_cell != scr_cell:
-							screen.write(post_run)
-							screen.style(last_style)
-							screen.write(postpost_run)
+							self.screen.write(post_run)
+							self.screen.style(last_style, before_last_style)
+							self.screen.write(postpost_run)
 							state = RUNNING
 						elif extra >= 4:
 							state = BETWEEN
 							break
 						else:
 							extra += 1
-							postpost_run += buf_char
+							postpost_run += buff_char
 							break
+		self.on_screen.draw_pad(src, dest_x, dest_y, width, height, src_x, src_y)
 		self._do_write()
 
 def main():
-	scr = Screen()
+	#scr = Screen()
 	
-	signal.signal(signal.SIGWINCH, (lambda signum, frame: scr.update_size()))
+	#signal.signal(signal.SIGWINCH, (lambda signum, frame: scr.update_size()))
+	#scr.clear()
+	#scr.move(0, 0)
+	#scr.style(Style(fg=Style.GREEN, bg=Style.BLACK))
+	#scr.write("DONE!!!!!!!!!!!!!!!!!!!!!")
+	#scr.style(Style(Style.BRIGHT_GREEN, Style.BRIGHT_MAGENTA))
+	#scr.move(2, 10)
+	#scr.write("......... WAIT! THERE'S MORE!!")
+	#scr.style(Style.default)
+	#scr.move(scr.width-2, scr.height+1)
+	#scr.write("01")
+	
+	raw_screen = Screen()
+	
+	scr = BufferedScreen()
 	scr.clear()
-	scr.move(0, 0)
-	scr.style(Style(fg=Style.GREEN, bg=Style.BLACK))
-	scr.write("DONE!!!!!!!!!!!!!!!!!!!!!")
-	scr.style(Style(Style.BRIGHT_GREEN, Style.BRIGHT_MAGENTA))
-	scr.move(2, 10)
-	scr.write("......... WAIT! THERE'S MORE!!")
-	scr.style(Style())
-	scr.move(scr.width-2, scr.height+1)
-	scr.write("01")
+	signal.signal(signal.SIGWINCH, (lambda signum, frame: scr.reset()))
 	
-	pad = ScreenPad(64, 16)
+	pad = Pad(64, 16)
 	for x in range(16):
 		for y in range(16):
 			pad.write(x*4, y, "ab", Style(Style.COLORS[x], Style.COLORS[y]))
@@ -344,8 +382,16 @@ def main():
 	#pad.write(10, 10, "hello world. This is Dog", (Attr.FG_BRIGHT_BLUE, Attr.BG_BLUE, Attr.BOLD))
 	scr.draw_pad(pad, 0, 0)
 	
-	scr.move(0, 25)
-	scr.style(Style())
+	pad.write(28, 3, "hello world", Style(Style.RED, Style.BRIGHT_BLUE))
+	
+	raw_screen.write("\n\n")
+	raw_screen.write(str(scr.on_screen.data))
+	raw_screen.write("\n\n")
+	
+	scr.draw_pad_optimized(pad)
+	
+	raw_screen.move(0, 25)
+	raw_screen.style(Style.default)
 
 
 if __name__ == "__main__":
