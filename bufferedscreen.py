@@ -6,16 +6,28 @@ import io
 from constants import INT_INFINITY
 from screen import Screen
 from pad import Pad
+from drawtarget import DrawTarget
+from style import Style
 
 
 
 
-class BufferedScreen:
+class BufferedScreen(DrawTarget):
 	
 	def __init__(self, out=sys.stdout):
 		self.out = out
 		self.screen = Screen(io.StringIO())
 		self.on_screen = Pad(self.screen.width, self.screen.height)
+		self.style = None
+	
+	
+	@property
+	def width(self):
+		return self.screen.width
+	
+	@property
+	def height(self):
+		return self.screen.height
 	
 	def clear(self):
 		self.on_screen = Pad(self.screen.width, self.screen.height)
@@ -25,22 +37,30 @@ class BufferedScreen:
 		self.screen.update_size()
 		self.clear()
 	
-	def _do_write(self):
+	def update(self):
 		self.out.write(self.screen.out.getvalue())
 		self.screen.out = io.StringIO()
+	
+	def write(self, x, y, text, style=Style.default):
+		text = text[:self.screen.width-x]
+		self.on_screen.write(x, y, text, style)
+		#self.screen.write(x, y, text, style)
+		self.screen.move(x, y)
+		self.screen.style(style, self.style)
+		self.style = style
+		self.screen.addstr(text)
 	
 	def redraw(self):
 		self.screen.clear()
 		self.screen.draw_pad(self.on_screen)
-		self._do_write()
+		self.update()
 	
-	def draw_pad(self, *args, **kwargs):
+	def draw_pad_direct(self, *args, **kwargs):
 		self.on_screen.draw_pad(*args, **kwargs)
 		self.screen.draw_pad(*args, **kwargs)
-		self._do_write()
 		
 	
-	def draw_pad_optimized(self, src, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
+	def draw_pad(self, src, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
 		# Optimizes on the amount of characters to write to the terminal, which is more crucial in applications running over a network connection (like ssh)
 		# This will only draw the changed characters
 		width = min(self.screen.width - dest_x, src.width - src_x)
@@ -51,7 +71,6 @@ class BufferedScreen:
 		POSTRUN = "POSTRUN" # after changing some characters. Unsure whether to jump to next place or just continue
 		POSTPOSTRUN = "POSTPOSTRUN" # same, but now the style has been changed
 		BETWEEN = "BETWEEN" # run finished, but not worth to continue. Looking for the next changes
-		last_style = None
 		for y in range(height):
 			#runs = []
 			#current_run = None
@@ -63,7 +82,7 @@ class BufferedScreen:
 			extra = 0
 			
 			state = BEGIN
-			#last_style = None
+			#self.style = None
 			#cursor_x = None
 			for x, (scr_cell, buff_cell) in enumerate(zip(
 					self.on_screen.get_line(dest_x, dest_y + y, width),
@@ -94,9 +113,9 @@ class BufferedScreen:
 					if state == RUNNING:
 						if scr_cell != buff_cell:
 							# continuing the same run
-							self.screen.style(buff_style, last_style)
-							last_style = buff_style
-							self.screen.write(buff_char)
+							self.screen.style(buff_style, self.style)
+							self.style = buff_style
+							self.screen.addstr(buff_char)
 							break
 						cursor_x = x
 						state = POSTRUN
@@ -106,28 +125,28 @@ class BufferedScreen:
 					
 					if state == POSTRUN:
 						if buff_cell != scr_cell:
-							self.screen.write(post_run)
+							self.screen.addstr(post_run)
 							state = RUNNING
 						elif extra >= 4:
 							state = BETWEEN
 							break
-						elif buff_style == last_style:
+						elif buff_style == self.style:
 							extra += 1
 							post_run += buff_char
 							break
 						else:
-							before_last_style = last_style
-							last_style = buff_style
+							before_last_style = self.style
+							self.style = buff_style
 							state = POSTPOSTRUN
 					
 					if state == POSTPOSTRUN:
-						if buff_style != last_style:
+						if buff_style != self.style:
 							state = BETWEEN
 							break
 						if buff_cell != scr_cell:
-							self.screen.write(post_run)
-							self.screen.style(last_style, before_last_style)
-							self.screen.write(postpost_run)
+							self.screen.addstr(post_run)
+							self.screen.style(self.style, before_last_style)
+							self.screen.addstr(postpost_run)
 							state = RUNNING
 						elif extra >= 4:
 							state = BETWEEN
@@ -137,4 +156,3 @@ class BufferedScreen:
 							postpost_run += buff_char
 							break
 		self.on_screen.draw_pad(src, dest_x, dest_y, width, height, src_x, src_y)
-		self._do_write()

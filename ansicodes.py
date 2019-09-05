@@ -12,24 +12,15 @@ from bufferedscreen import BufferedScreen
 from constants import INT_INFINITY
 from pad import Pad
 from style import Style
+from window import Window
+from widgets.textbox import TextBox
+from widgets.charbox import CharBox
+from widgets.hbox import HBox
 
 
 
 
 def main():
-	#scr = Screen()
-	
-	#signal.signal(signal.SIGWINCH, (lambda signum, frame: scr.update_size()))
-	#scr.clear()
-	#scr.move(0, 0)
-	#scr.style(Style(fg=Style.GREEN, bg=Style.BLACK))
-	#scr.write("DONE!!!!!!!!!!!!!!!!!!!!!")
-	#scr.style(Style(Style.BRIGHT_GREEN, Style.BRIGHT_MAGENTA))
-	#scr.move(2, 10)
-	#scr.write("......... WAIT! THERE'S MORE!!")
-	#scr.style(Style.default)
-	#scr.move(scr.width-2, scr.height+1)
-	#scr.write("01")
 	
 	raw_screen = Screen()
 	
@@ -43,16 +34,34 @@ def main():
 			pad.write(x*4, y, "ab", Style(Style.COLORS[x], Style.COLORS[y]))
 			pad.write(x*4+2, y, "c", Style(Style.COLORS[x], Style.COLORS[y], bold=True))
 	#pad.write(10, 10, "hello world. This is Dog", (Attr.FG_BRIGHT_BLUE, Attr.BG_BLUE, Attr.BOLD))
-	scr.draw_pad(pad, 0, 0)
+	scr.draw_pad_direct(pad, 0, 0)
 	
 	pad.write(28, 3, "hello world", Style(Style.RED, Style.BRIGHT_BLUE))
 	
 	raw_screen.style(Style.default)
-	raw_screen.write("\n\n")
-	#raw_screen.write(str(scr.on_screen.data))
-	raw_screen.write("\n\n")
+	raw_screen.addstr("\n\n")
+	#raw_screen.addstr(str(scr.on_screen.data))
+	raw_screen.addstr("\n\n")
 	
-	scr.draw_pad_optimized(pad)
+	scr.draw_pad(pad)
+	scr.update()
+	
+	
+	text1 = TextBox()
+	text1.set_text("lorum ipsum dolor \nsit amet\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1\nbye")
+	
+	text2 = CharBox()
+	text2.set_text("It is a truth, universally accepted bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb2\ndone")
+	
+	box = HBox([text1, text2], [32])
+	
+	
+	win = Window(scr, 10, 10)
+	box.resize(win)
+	#text.resize(win)
+	
+	box.update()
+	scr.update()
 	
 	raw_screen.move(0, 25)
 	raw_screen.style(Style.default)

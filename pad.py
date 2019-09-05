@@ -1,9 +1,10 @@
 
 from style import Style
 from constants import INT_INFINITY
+from drawtarget import DrawTarget
 
 
-class Pad:
+class Pad(DrawTarget):
 	
 	def __init__(self, width, height):
 		self.width = width

@@ -2,6 +2,8 @@
 import sys
 import shutil
 from constants import INT_INFINITY
+from drawtarget import DrawTarget
+from style import Style
 
 
 class Attr:
@@ -19,7 +21,7 @@ class Attr:
 	FG_COLORS = [str(i) for i in list(range(30, 38)) + list(range(90, 98))]
 	BG_COLORS = [str(i) for i in list(range(40, 48)) + list(range(100, 108))]
 
-class Screen:
+class Screen(DrawTarget):
 	
 	
 	def __init__(self, out=sys.stdout):
@@ -38,7 +40,7 @@ class Screen:
 	def move(self, x, y):
 		self.out.write("\033[{};{}f".format(y+1, x+1))
 	
-	def write(self, text):
+	def addstr(self, text):
 		self.out.write(text)
 	
 	def style(self, style, previous=None):
@@ -57,6 +59,11 @@ class Screen:
 			parts.append(Attr.BOLD)
 		ansistyle = "\033[" + ";".join(parts) + "m"
 		self.out.write(ansistyle)
+	
+	def write(x, y, text, style=Style.default):
+		self.move(x, y)
+		self.style(style)
+		self.addstr(text)
 	
 	def clear(self):
 		self.out.write("\033[0m\033[2J")
@@ -93,4 +100,4 @@ class Screen:
 				style, char = cell
 				screen.style(style, last_style)
 				last_style = style
-				screen.write(char)
+				screen.addstr(char)
