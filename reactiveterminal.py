@@ -2,53 +2,45 @@
 
 
 from bufferedscreen import BufferedScreen
+from screen import Screen
 from window import Window
-
-from widgets.textbox import TextBox
-from widgets.charbox import CharBox
-from widgets.hbox import HBox
-
-import xml.etree.ElementTree as ET
+from layout import Layout
 
 
-def build_textbox(etree):
-	return TextBox(etree.text)
+import shutil
 
-def build_charbox(etree):
-	return CharBox(etree.text)
 
-def build_hbox(etree):
-	children = []
-	separators = []
-	for childnode in etree:
-		children.append(build_tree(childnode))
-		separators.append(int(childnode.attrib.get("width")))
-	return HBox(children, separators)
 
-widgets = {
-	"textbox": build_textbox,
-	"charbox": build_charbox,
-	"hbox": build_hbox
-}
 
-def build_tree(etree):
-	return widgets[etree.tag](etree)
 
 def main():
 	
 	scr = BufferedScreen()
 	scr.clear()
 	
-	window = Window(scr)
+	#window = Window(scr)
 	
-	tree = build_tree(ET.parse("layout.xml").getroot())
+	with open("layout.xml") as f:
+		layouttext = f.read()
+	
+	layout = Layout(layouttext)
+	
+	layout.resize(scr)
+	layout.update(force=True)
+	
+	#tree = build_layout(ET.parse("layout.xml").getroot())
 
-	tree.resize(scr)
+	#tree.resize(scr)
 	
-	tree.update()
+	#tree.update()
 	
 	scr.update()
 	
+	raw = Screen()
+	size = shutil.get_terminal_size()
+	#raw.write(0,0,"********")
+	#raw.write(size.columns-1, size.lines-1, "*")
+	raw.move(0, size.lines-1)
 	
 
 

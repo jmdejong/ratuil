@@ -4,10 +4,9 @@ import textwrap
 
 class TextBox(Widget):
 	
-	def __init__(self, text=None):
+	def __init__(self, children, etree):
 		self.lines = []
-		if text is not None:
-			self.set_text(text)
+		self.set_text(etree.text)
 	
 	def set_text(self, text):
 		self.lines = text.splitlines()
@@ -18,7 +17,7 @@ class TextBox(Widget):
 		for line in self.lines:
 			lines.extend(textwrap.wrap(line, target.width))
 		
-		for y, line in enumerate(lines):
+		for y, line in enumerate(lines[:target.height]):
 			target.write(0, y, line)
 		
 			

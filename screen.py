@@ -44,6 +44,8 @@ class Screen(DrawTarget):
 		self.out.write(text)
 	
 	def style(self, style, previous=None):
+		if style is None:
+			style = Style.default
 		if style == previous:
 			return
 		parts = []
@@ -60,7 +62,7 @@ class Screen(DrawTarget):
 		ansistyle = "\033[" + ";".join(parts) + "m"
 		self.out.write(ansistyle)
 	
-	def write(x, y, text, style=Style.default):
+	def write(self, x, y, text, style=None):
 		self.move(x, y)
 		self.style(style)
 		self.addstr(text)

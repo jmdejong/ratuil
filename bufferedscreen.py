@@ -7,7 +7,6 @@ from constants import INT_INFINITY
 from screen import Screen
 from pad import Pad
 from drawtarget import DrawTarget
-from style import Style
 
 
 
@@ -41,7 +40,7 @@ class BufferedScreen(DrawTarget):
 		self.out.write(self.screen.out.getvalue())
 		self.screen.out = io.StringIO()
 	
-	def write(self, x, y, text, style=Style.default):
+	def write(self, x, y, text, style=None):
 		text = text[:self.screen.width-x]
 		self.on_screen.write(x, y, text, style)
 		#self.screen.write(x, y, text, style)

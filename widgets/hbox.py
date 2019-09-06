@@ -1,27 +1,25 @@
 
-from . import Widget
+from .splitbox import SplitBox
 from window import Window
+from size import Value
 
-class HBox(Widget):
-	
-	def __init__(self, children, separators):
-		self.children = children
-		self.separators = separators
+class HBox(SplitBox):
 	
 	def resize(self, target):
-		x = 0
-		for i, child in enumerate(self.children):
-			if x >= target.width:
+		start = 0
+		end = target.width
+		for childtree, child in zip(self.etree, self.children):
+			childattr = childtree.attrib
+			if start >= end:
 				break
-			if i < len(self.separators) and self.separators[i] is not None:
-				end = min(x + self.separators[i], target.width)
+			width = end - start
+			if "width" in childattr:
+				width = min(width, Value.parse(childattr["width"]).to_actual_value(width))
+			if "right" in childattr.get("align", "").casefold():
+				win = Window(target, end - width, 0, width, target.height)
+				end -= width
 			else:
-				end = target.width
-			win = Window(target, x, 0, end, target.height)
-			x += end
+				win = Window(target, start, 0, width, target.height)
+				start += width
 			child.resize(win)
-			child.update()
-	
-	def update(self, force=False):
-		for child in self.children:
-			child.update(force)
+			#child.update()

@@ -1,6 +1,5 @@
 
 from constants import INT_INFINITY
-from style import Style
 from drawtarget import DrawTarget
 
 class Window(DrawTarget):
@@ -12,7 +11,7 @@ class Window(DrawTarget):
 		self.width = width if width is not None else target.width - x
 		self.height = height if height is not None else target.height - y
 	
-	def write(self, x, y, text, style=Style.default):
+	def write(self, x, y, text, style=None):
 		if x < 0 or y < 0 or y >= self.height:
 			raise IndexError("Trying to write outside window")
 		text = text[:self.width - x]

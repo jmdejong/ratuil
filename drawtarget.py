@@ -1,6 +1,5 @@
 
 from constants import INT_INFINITY
-from style import Style
 
 class DrawTarget:
 	
@@ -11,7 +10,7 @@ class DrawTarget:
 		self.height = None
 	
 	
-	def write(self, x, y, text, style=Style.default):
+	def write(self, x, y, text, style=None):
 		raise NotImplementedError()
 	
 	def draw_pad(self, src, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
