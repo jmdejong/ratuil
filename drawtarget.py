@@ -4,11 +4,11 @@ from constants import INT_INFINITY
 class DrawTarget:
 	
 	# is actually more of an interface / trait than a useful class
+	width = None
+	height = None
 	
-	def __init__(self):
-		self.width = None
-		self.height = None
-	
+	def clear(self):
+		raise NotImplementedError()
 	
 	def write(self, x, y, text, style=None):
 		raise NotImplementedError()

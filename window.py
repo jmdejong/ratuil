@@ -17,6 +17,10 @@ class Window(DrawTarget):
 		text = text[:self.width - x]
 		self.target.write(self.x + x, self.y + y, text, style)
 	
+	def clear(self):
+		for y in range(self.height):
+			self.write(0, y, " " * self.width)
+	
 	def draw_pad(self, src, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
 		if dest_x < 0 or dest_y < 0:
 			raise IndexError("Trying to draw pad outside window")
