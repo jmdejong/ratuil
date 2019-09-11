@@ -28,6 +28,10 @@ class BufferedScreen(DrawTarget):
 	def height(self):
 		return self.screen.height
 	
+	@property
+	def size_changed(self):
+		return self.screen.size_changed
+	
 	def clear(self):
 		self.on_screen = Pad(self.screen.width, self.screen.height)
 		self.screen.clear()
@@ -134,18 +138,18 @@ class BufferedScreen(DrawTarget):
 							post_run += buff_char
 							break
 						else:
-							before_last_style = self.style
-							self.style = buff_style
+							new_style = buff_style
 							state = POSTPOSTRUN
 					
 					if state == POSTPOSTRUN:
-						if buff_style != self.style:
+						if buff_style != new_style:
 							state = BETWEEN
 							break
 						if buff_cell != scr_cell:
 							self.screen.addstr(post_run)
-							self.screen.style(self.style, before_last_style)
+							self.screen.style(new_style, self.style)
 							self.screen.addstr(postpost_run)
+							self.style = new_style
 							state = RUNNING
 						elif extra >= 4:
 							state = BETWEEN
