@@ -20,7 +20,7 @@ class Listing(Widget):
 		#lines = [line[:target.width] for line in self.items][:target.height]
 		#for y, line in enumerate(lines):
 			#target.write(0, y, line)
-		
+		target.clear()
 		width = target.width
 		height = target.height
 		
@@ -31,7 +31,7 @@ class Listing(Widget):
 		for i, item in enumerate(self.items[start:end]):
 			if i + start == self.selector:
 				target.write(0, i, self.selector_char)
-			target.write(1, i, item)
+			target.write(len(self.selector_char), i, item)
 		if end < len(self.items):
 			target.write(width-1, height-1, "+")
 		if start > 0:

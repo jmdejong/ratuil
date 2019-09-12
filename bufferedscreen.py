@@ -63,11 +63,11 @@ class BufferedScreen(DrawTarget):
 		self.screen.draw_pad(*args, **kwargs)
 		
 	
-	def draw_pad(self, src, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
+	def draw_pad(self, pad, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
 		# Optimizes on the amount of characters to write to the terminal, which is more crucial in applications running over a network connection (like ssh)
 		# This will only draw the changed characters
-		width = min(self.screen.width - dest_x, src.width - src_x)
-		height = min(self.screen.height - dest_y, src.height - src_y)
+		width = min(width, (self.screen.width - dest_x) // pad.char_width, pad.width - src_x)
+		height = min(height, self.screen.height - dest_y, pad.height - src_y)
 		
 		BEGIN = "BEGIN" # before anything on the line has been done
 		RUNNING = "RUNNING" # while changing current characters
@@ -89,7 +89,7 @@ class BufferedScreen(DrawTarget):
 			#cursor_x = None
 			for x, (scr_cell, buff_cell) in enumerate(zip(
 					self.on_screen.get_line(dest_x, dest_y + y, width),
-					src.get_line(src_x, src_y + y, width))):
+					pad.get_line(src_x, src_y + y, width))):
 				if scr_cell is None:
 					scr_cell = (None, None)
 				scr_style, scr_char = scr_cell
@@ -108,7 +108,7 @@ class BufferedScreen(DrawTarget):
 							break
 						# start the first run
 						if state == BEGIN:
-							self.screen.move(dest_x + x, dest_y + y)
+							self.screen.move(dest_x + x*pad.char_width, dest_y + y)
 						else:
 							self.screen.skip(x-cursor_x)
 						state = RUNNING
@@ -158,4 +158,4 @@ class BufferedScreen(DrawTarget):
 							extra += 1
 							postpost_run += buff_char
 							break
-		self.on_screen.draw_pad(src, dest_x, dest_y, width, height, src_x, src_y)
+		self.on_screen.draw_pad(pad, dest_x, dest_y, width, height, src_x, src_y)

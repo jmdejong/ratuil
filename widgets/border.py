@@ -1,6 +1,7 @@
 
 from . import Widget
 from window import Window
+from style import Style
 
 class Border(Widget):
 	
@@ -11,6 +12,7 @@ class Border(Widget):
 		self.vertchar = "|"
 		self.horchar = "-"
 		self.cornerchar = "+"
+		self.style = Style.from_str(etree.attrib.get("style"))
 		char = etree.attrib.get("char")
 		if char is not None:
 			self.vertchar = char
@@ -34,15 +36,11 @@ class Border(Widget):
 			#raise Exception(self.is_changed(), self.screen)
 			self.draw(self.screen)
 			self.changed = False
-		self.child.update()
+		self.child.update(force)
 		
 	def draw(self, target):
-		target.write(1, 0, self.horchar * (target.width - 2))
-		target.write(1, target.height - 1, self.horchar * (target.width - 2))
+		target.write(0, 0, self.cornerchar + self.horchar * (target.width - 2) + self.cornerchar, self.style)
+		target.write(0, target.height - 1, self.cornerchar + self.horchar * (target.width - 2) + self.cornerchar, self.style)
 		for y in range(1, target.height - 1):
-			target.write(0, y, self.vertchar)
-			target.write(target.width-1, y, self.vertchar)
-		target.write(0, 0, self.cornerchar)
-		target.write(target.width - 1, 0, self.cornerchar)
-		target.write(0, target.height - 1, self.cornerchar)
-		target.write(target.width - 1, target.height - 1, self.cornerchar)
+			target.write(0, y, self.vertchar, self.style)
+			target.write(target.width-1, y, self.vertchar, self.style)

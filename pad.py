@@ -6,9 +6,10 @@ from drawtarget import DrawTarget
 
 class Pad(DrawTarget):
 	
-	def __init__(self, width, height):
+	def __init__(self, width, height, char_width=1):
 		self.width = width
 		self.height = height
+		self.char_width = char_width
 		self.clear()
 	
 	def resize(self, width, height):
@@ -51,7 +52,7 @@ class Pad(DrawTarget):
 		width = min(dest.width - dest_x, src.width - src_x)
 		height = min(dest.height - dest_y, src.height - src_y)
 		for y in range(height):
-			for x, cell in enumerate(src.get_line(src_x, y, width)):
+			for x, cell in enumerate(src.get_line(src_x, src_y + y, width)):
 				if cell is not None:
 					style, char = cell
-					self.write(x, y, char, style)
+					self.write(dest_x + x, dest_y + y, char, style)

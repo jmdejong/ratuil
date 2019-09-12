@@ -15,7 +15,7 @@ class VBox(SplitBox):
 			height = end - start
 			if "height" in childattr:
 				height = min(height, Value.parse(childattr["height"]).to_actual_value(height))
-			if "top" in childattr.get("align", "").casefold():
+			if "bottom" in childattr.get("align", "").casefold():
 				win = Window(target, 0, end - height, target.width, height)
 				end -= height
 			else:

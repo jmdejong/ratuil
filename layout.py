@@ -6,6 +6,9 @@ from widgets.hbox import HBox
 from widgets.vbox import VBox
 from widgets.listing import Listing
 from widgets.border import Border
+from widgets.log import Log
+from widgets.textinput import TextInput
+from widgets.field import Field
 
 import xml.etree.ElementTree as ET
 
@@ -15,7 +18,10 @@ widgets = {
 	"hbox": HBox,
 	"vbox": VBox,
 	"listing": Listing,
-	"border": Border
+	"border": Border,
+	"log": Log,
+	"textinput": TextInput,
+	"field": Field
 }
 
 
@@ -25,8 +31,10 @@ class Layout:
 	def __init__(self, xmllayout):
 		
 		self.tree = ET.fromstring(xmllayout)
-		self.layout = self.build_layout(self.tree)
 		self.id_elements = {}
+		self.changed = True
+		self.target = None
+		self.layout = self.build_layout(self.tree)
 		
 	def build_layout(self, etree):
 		children = [self.build_layout(child) for child in etree]
@@ -35,9 +43,22 @@ class Layout:
 			self.id_elements[etree.attrib["id"]] = widget
 		return widget
 	
-	def resize(self, target):
-		self.layout.resize(target)
+	def set_target(self, target):
+		self.target = target
+		self.resize()
+	
+	def resize(self):
+		self.layout.resize(self.target)
+		self.changed = True
 	
 	def update(self, force=False):
+		if self.target.size_changed:
+			self.resize()
+		if self.changed:
+			force = True
+			self.changed = False
 		self.layout.update(force)
+	
+	def get(self, id):
+		return self.id_elements.get(id)
 	

@@ -71,18 +71,69 @@ class Style:
 	
 	COLORS = list(range(16))
 	
-	def __init__(self, fg=None, bg=None, bold=False):
+	BOLD = "BOLD"
+	REVERSE = "REVERSE"
+	UNDERSCORE = "UNDERSCORE"
+	
+	ATTRIBUTES = [BOLD, REVERSE, UNDERSCORE]
+	
+	def __init__(self, fg=None, bg=None, bold=False, reverse=False, underscore=False):
 		self.fg = fg
 		self.bg = bg
-		self.bold = bold
+		self.attr = {
+			self.BOLD: bold,
+			self.REVERSE: reverse,
+			self.UNDERSCORE: underscore
+		}
+		self.attr_set = frozenset(key for key, value in self.attr.items() if value)
 	
 	def __eq__(self, other):
-		return isinstance(other, Style) and other.fg == self.fg and other.bg == self.bg and other.bold == self.bold
+		return isinstance(other, Style) and other.fg == self.fg and other.bg == self.bg and self.attr_set == other.attr_set
 	
 	def __repr__(self):
 		if self == Style.default:
 			return "Style()"
-		return "Style({}, {}, {})".format(self.fg, self.bg, self.bold)
+		return "Style({}, {}, {})".format(self.fg, self.bg, ", ".join(self.attr.values()))
+	
+	def add(self, other):
+		new = Style(self.fg, self.bg, self.bold)
+		if other.fg is not None:
+			new.fg = other.fg
+		if other.bg is not None:
+			new.bg = other.bg
+		for key, val in other.attr:
+			if val:
+				new.attr[key] = val
+	
+	@property
+	def bold(self):
+		return self.attr[self.BOLD]
+	
+	@property
+	def underscore(self):
+		return self.attr[self.UNDERSCORE]
+	
+	@property
+	def reverse(self):
+		return self.attr[self.REVERSE]
+	
+	@classmethod
+	def from_str(self, text):
+		style = Style()
+		if text is None:
+			return style
+		parts = text.split(";")
+		for part in parts:
+			attr, _sep, value = part.partition(":")
+			attr = attr.strip().casefold()
+			value = value.strip()
+			if attr == "fg" and int(value) in self.COLORS:
+				style.fg = int(value)
+			if attr == "bg" and int(value) in self.COLORS:
+				style.bg = int(value)
+			if attr in style.attr:
+				style.attr[attr] = True
+		return style
 	
 
 Style.default = Style()

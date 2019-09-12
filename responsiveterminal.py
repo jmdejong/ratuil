@@ -20,7 +20,7 @@ def main():
 	
 	layout = Layout(layouttext)
 	
-	layout.resize(scr)
+	layout.set_target(scr)
 	layout.update(force=True)
 	
 	
