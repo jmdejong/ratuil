@@ -35,6 +35,7 @@ class Layout:
 		self.changed = True
 		self.target = None
 		self.layout = self.build_layout(self.tree)
+		self._target_size = None
 		
 	def build_layout(self, etree):
 		children = [self.build_layout(child) for child in etree]
@@ -49,10 +50,11 @@ class Layout:
 	
 	def resize(self):
 		self.layout.resize(self.target)
+		self._target_size = (self.target.width, self.target.height)
 		self.changed = True
 	
 	def update(self, force=False):
-		if self.target.size_changed:
+		if self._target_size != (self.target.width, self.target.height):
 			self.resize()
 		if self.changed:
 			force = True

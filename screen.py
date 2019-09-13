@@ -4,6 +4,7 @@ import shutil
 from constants import INT_INFINITY
 from drawtarget import DrawTarget
 from style import Style
+import util
 
 
 class Attr:
@@ -28,14 +29,12 @@ class Screen(DrawTarget):
 		self.out = out
 		self.width = 0
 		self.height = 0
-		self.size_changed = True
 		self.update_size()
 	
 	def update_size(self):
 		size = shutil.get_terminal_size()
 		self.width = size.columns
 		self.height = size.lines
-		self.size_changed = True
 	
 	def move(self, x, y):
 		self.out.write("\033[{};{}f".format(y+1, x+1))
@@ -79,8 +78,8 @@ class Screen(DrawTarget):
 		if amount == 1:
 			stramount = ""
 		else:
-			stramount = str(amount)
-		self.out.write("\033[{}C".format(stramount))
+			stramount = str(abs(amount))
+		self.out.write("\033[{}{}".format(stramount, ("C" if amount >= 0 else "D")))
 	
 	def draw_pad(self, pad, scr_x=0, scr_y=0, width=INT_INFINITY, height=INT_INFINITY, pad_x=0, pad_y=0):
 		screen = self
@@ -95,13 +94,14 @@ class Screen(DrawTarget):
 				if cell is None:
 					skip += pad.char_width
 					continue
-				if skip:
+				if skip != 0:
 					screen.skip(skip)
 					skip = 0
 				style, char = cell
 				screen.style(style, last_style)
 				last_style = style
 				screen.addstr(char)
+				skip += 1 - util.charwidth(char)
 	
 	def hide_cursor(self):
 		self.out.write("\033[?25l")

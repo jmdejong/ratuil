@@ -7,6 +7,7 @@ from constants import INT_INFINITY
 from screen import Screen
 from pad import Pad
 from drawtarget import DrawTarget
+import util
 
 
 
@@ -27,10 +28,6 @@ class BufferedScreen(DrawTarget):
 	@property
 	def height(self):
 		return self.screen.height
-	
-	@property
-	def size_changed(self):
-		return self.screen.size_changed
 	
 	def clear(self):
 		self.on_screen = Pad(self.screen.width, self.screen.height)
@@ -83,6 +80,7 @@ class BufferedScreen(DrawTarget):
 			postpost_run = ""
 			post_style = None
 			extra = 0
+			skip = 0
 			
 			state = BEGIN
 			#self.style = None
@@ -98,64 +96,76 @@ class BufferedScreen(DrawTarget):
 						continue
 					if state == RUNNING:
 						cursor_x = x
+					skip += 1
 					state = BETWEEN
 					continue
 				buff_style, buff_char = buff_cell
 				while True:
 				
-					if  state == BEGIN or state == BETWEEN:
+					if state == BEGIN or state == BETWEEN:
 						if scr_cell == buff_cell:
+							skip += 1
 							break
 						# start the first run
 						if state == BEGIN:
+							skip = 0
 							self.screen.move(dest_x + x*pad.char_width, dest_y + y)
-						else:
-							self.screen.skip(x-cursor_x)
+						#else:
+							#self.screen.skip(skip)#x-cursor_x)
+							#skip = 0
 						state = RUNNING
 					
 					if state == RUNNING:
 						if scr_cell != buff_cell:
+							self.screen.skip(skip)
+							skip = 0
 							# continuing the same run
 							self.screen.style(buff_style, self.style)
 							self.style = buff_style
 							self.screen.addstr(buff_char)
+							skip += 1 - util.charwidth(buff_char)
 							break
-						cursor_x = x
-						state = POSTRUN
+						#cursor_x = x #+ util.char_width(buf_char) - 1
+						state = BETWEEN#POSTRUN
 						extra = 0
 						post_run = ""
 						postpost_run = ""
 					
-					if state == POSTRUN:
-						if buff_cell != scr_cell:
-							self.screen.addstr(post_run)
-							state = RUNNING
-						elif extra >= 4:
-							state = BETWEEN
-							break
-						elif buff_style == self.style:
-							extra += 1
-							post_run += buff_char
-							break
-						else:
-							new_style = buff_style
-							state = POSTPOSTRUN
+					#if state == POSTRUN:
+						#if buff_cell != scr_cell:
+							#self.screen.skip(skip)
+							#skip = 0
+							#self.screen.addstr(post_run)
+							#state = RUNNING
+							#continue
+						#elif extra >= 4:
+							#skip += extra
+							#state = BETWEEN
+							#break
+						#elif buff_style == self.style:
+							#extra += 1
+							#post_run += buff_char
+							#break
+						#else:
+							#new_style = buff_style
+							#state = POSTPOSTRUN
 					
-					if state == POSTPOSTRUN:
-						if buff_style != new_style:
-							state = BETWEEN
-							break
-						if buff_cell != scr_cell:
-							self.screen.addstr(post_run)
-							self.screen.style(new_style, self.style)
-							self.screen.addstr(postpost_run)
-							self.style = new_style
-							state = RUNNING
-						elif extra >= 4:
-							state = BETWEEN
-							break
-						else:
-							extra += 1
-							postpost_run += buff_char
-							break
+					#if state == POSTPOSTRUN:
+						#if buff_style != new_style:
+							#state = BETWEEN
+							#break
+						#if buff_cell != scr_cell:
+							#self.screen.addstr(post_run)
+							#self.screen.style(new_style, self.style)
+							#self.screen.addstr(postpost_run)
+							#self.style = new_style
+							#state = RUNNING
+						#elif extra >= 4:
+							#skip += extra
+							#state = BETWEEN
+							#break
+						#else:
+							#extra += 1
+							#postpost_run += buff_char
+							#break
 		self.on_screen.draw_pad(pad, dest_x, dest_y, width, height, src_x, src_y)

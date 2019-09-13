@@ -5,6 +5,7 @@ from bufferedscreen import BufferedScreen
 from screen import Screen
 from layout import Layout
 from style import Style
+from pad import Pad
 
 
 import shutil
@@ -104,7 +105,7 @@ def draw(layout, field):
 	
 
 def main():
-	scr = Screen()
+	scr = BufferedScreen()
 	scr.clear()
 	
 	with open("game.xml") as f:
@@ -112,19 +113,22 @@ def main():
 	
 	layout = Layout(layouttext)
 	
-	layout.set_target(scr)
+	buf = Pad(scr.width, scr.height)
+	
+	layout.set_target(buf)
 	layout.update(force=True)
 	
-	signal.signal(signal.SIGWINCH, (lambda signum, frame: scr.reset()))
+	signal.signal(signal.SIGWINCH, (lambda signum, frame: (scr.reset(), buf.resize(scr.width, scr.height))))
 	
 	tty.setcbreak(sys.stdin)
 	
 	
 	Screen.default.hide_cursor()
 	
-	field = Field(150, 40)
+	field = Field(200, 40)
 	while True:
 		draw(layout, field)
+		scr.draw_pad(buf)
 		if hasattr(scr, "update"):
 			scr.update()
 		field.update(sys.stdin.read(1))

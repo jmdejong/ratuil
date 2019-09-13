@@ -49,8 +49,8 @@ class Pad(DrawTarget):
 	
 	def draw_pad(self, src, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
 		dest = self
-		width = min(dest.width - dest_x, src.width - src_x)
-		height = min(dest.height - dest_y, src.height - src_y)
+		width = min(width, dest.width - dest_x, src.width - src_x)
+		height = min(height, dest.height - dest_y, src.height - src_y)
 		for y in range(height):
 			for x, cell in enumerate(src.get_line(src_x, src_y + y, width)):
 				if cell is not None:
