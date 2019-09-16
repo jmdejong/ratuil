@@ -4,7 +4,7 @@
 from bufferedscreen import BufferedScreen
 from screen import Screen
 from layout import Layout
-from style import Style
+from textstyle import TextStyle
 from pad import Pad
 
 
@@ -17,16 +17,16 @@ import termios
 
 
 sprites = {
-	"floor": ("＿", Style(3)),
-	"wall": ("Ｘ", Style(7,8)),
-	"coin": ("ｃ", Style(11)),
-	"player": ("＠", Style(12))
+	"floor": ("＿", TextStyle(3)),
+	"wall": ("Ｘ", TextStyle(7,8)),
+	"coin": ("ｃ", TextStyle(11)),
+	"player": ("＠", TextStyle(12))
 }
 #sprites = {
-	#"floor": ("_", Style(3)),
-	#"wall": ("x", Style(7,8)),
-	#"coin": ("c", Style(11)),
-	#"player": ("@", Style(12))
+	#"floor": ("_", TextStyle(3)),
+	#"wall": ("x", TextStyle(7,8)),
+	#"coin": ("c", TextStyle(11)),
+	#"player": ("@", TextStyle(12))
 #}
 
 generated_objects = {
@@ -121,9 +121,9 @@ def main():
 	signal.signal(signal.SIGWINCH, (lambda signum, frame: (scr.reset(), buf.resize(scr.width, scr.height))))
 	
 	tty.setcbreak(sys.stdin)
-	
-	
 	Screen.default.hide_cursor()
+	
+	layout.get("input").set_text("hello", 3)
 	
 	field = Field(200, 40)
 	while True:

@@ -49,7 +49,7 @@ class Attr:
 	FG_COLORS = [str(i) for i in list(range(30, 38)) + list(range(90, 98))]
 	BG_COLORS = [str(i) for i in list(range(40, 48)) + list(range(100, 108))]
 
-class Style:
+class TextStyle:
 	
 	BLACK = 0
 	RED = 1
@@ -71,9 +71,9 @@ class Style:
 	
 	COLORS = list(range(16))
 	
-	BOLD = "BOLD"
-	REVERSE = "REVERSE"
-	UNDERSCORE = "UNDERSCORE"
+	BOLD = "bold"
+	REVERSE = "reverse"
+	UNDERSCORE = "underscore"
 	
 	ATTRIBUTES = [BOLD, REVERSE, UNDERSCORE]
 	
@@ -88,22 +88,25 @@ class Style:
 		self.attr_set = frozenset(key for key, value in self.attr.items() if value)
 	
 	def __eq__(self, other):
-		return isinstance(other, Style) and other.fg == self.fg and other.bg == self.bg and self.attr_set == other.attr_set
+		return isinstance(other, TextStyle) and other.fg == self.fg and other.bg == self.bg and self.attr_set == other.attr_set
 	
 	def __repr__(self):
-		if self == Style.default:
-			return "Style()"
-		return "Style({}, {}, {})".format(self.fg, self.bg, ", ".join(self.attr.values()))
+		if self == self.default:
+			return "TextStyle()"
+		return "TextStyle({}, {}, {})".format(self.fg, self.bg, ", ".join(self.attr.values()))
 	
 	def add(self, other):
-		new = Style(self.fg, self.bg, self.bold)
+		fg = self.fg
 		if other.fg is not None:
-			new.fg = other.fg
+			fg = other.fg
+		bg = self.bg
 		if other.bg is not None:
-			new.bg = other.bg
+			bg = other.bg
+		attrs = dict(self.attr)
 		for key, val in other.attr:
 			if val:
-				new.attr[key] = val
+				attrs[key] = val
+		return TextStyle(fg, bg, **attrs)
 	
 	@property
 	def bold(self):
@@ -119,21 +122,23 @@ class Style:
 	
 	@classmethod
 	def from_str(self, text):
-		style = Style()
 		if text is None:
-			return style
+			return self.default
+		fg = None
+		bg = None
+		attrs = {}
 		parts = text.split(";")
 		for part in parts:
 			attr, _sep, value = part.partition(":")
 			attr = attr.strip().casefold()
 			value = value.strip()
 			if attr == "fg" and int(value) in self.COLORS:
-				style.fg = int(value)
+				fg = int(value)
 			if attr == "bg" and int(value) in self.COLORS:
-				style.bg = int(value)
-			if attr in style.attr:
-				style.attr[attr] = True
-		return style
+				bg = int(value)
+			if attr in self.ATTRIBUTES:
+				attr[attr] = True
+		return TextStyle(fg, bg, **attrs)
 	
 
-Style.default = Style()
+TextStyle.default = TextStyle()

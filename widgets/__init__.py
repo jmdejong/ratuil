@@ -6,9 +6,13 @@ class Widget:
 	
 	changed = True
 	screen = None
+	style = None
 	
 	def change(self):
 		self.changed = True
+	
+	def set_box_style(self, style):
+		self.box_style = style
 	
 	def is_changed(self):
 		return self.changed

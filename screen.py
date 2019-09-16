@@ -3,7 +3,7 @@ import sys
 import shutil
 from constants import INT_INFINITY
 from drawtarget import DrawTarget
-from style import Style
+from textstyle import TextStyle
 import util
 
 
@@ -44,7 +44,7 @@ class Screen(DrawTarget):
 	
 	def style(self, style, previous=None):
 		if style is None:
-			style = Style.default
+			style = TextStyle.default
 		if style == previous:
 			return
 		parts = []
@@ -56,8 +56,12 @@ class Screen(DrawTarget):
 			parts.append(Attr.FG_COLORS[style.fg])
 		if style.bg is not None and (reset or style.bg != previous.bg):
 			parts.append(Attr.BG_COLORS[style.bg])
-		if style.attr[Style.BOLD] and (reset or not previous.bold):
+		if style.bold and (reset or not previous.bold):
 			parts.append(Attr.BOLD)
+		if style.underscore and (reset or not previous.underscore):
+			parts.append(Attr.UNDERSCORE)
+		if style.reverse and (reset or not previous.bold):
+			parts.append(Attr.REVERSE)
 		ansistyle = "\033[" + ";".join(parts) + "m"
 		self.out.write(ansistyle)
 	

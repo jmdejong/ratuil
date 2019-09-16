@@ -1,5 +1,4 @@
 
-from style import Style
 from constants import INT_INFINITY
 from drawtarget import DrawTarget
 
@@ -24,8 +23,6 @@ class Pad(DrawTarget):
 		self.fill(None)
 	
 	def write(self, x, y, text, style=None):
-		if style is None:
-			style = Style.default
 		if y >= self.height:
 			return
 		for i, char in enumerate(text):

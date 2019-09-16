@@ -1,7 +1,7 @@
 
 from . import Widget
 from window import Window
-from style import Style
+from textstyle import TextStyle
 
 class Border(Widget):
 	
@@ -12,7 +12,7 @@ class Border(Widget):
 		self.vertchar = "|"
 		self.horchar = "-"
 		self.cornerchar = "+"
-		self.style = Style.from_str(etree.attrib.get("style"))
+		self.style = TextStyle.from_str(etree.attrib.get("style"))
 		char = etree.attrib.get("char")
 		if char is not None:
 			self.vertchar = char

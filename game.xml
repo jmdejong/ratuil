@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <hbox>
 	<vbox width="20" align="right">
+		<bar id="health" height="2" full-char="+" empty-char="-" full-style="fg:1; bg:2" empty-style="fg:2; bg: 1;" total="10" filled="8"></bar>
 		<border>
 			<listing id="inventory">
 				milk
@@ -11,7 +12,7 @@
 	</vbox>
 	<vbox>
 		<textinput id="input" align="bottom" height="1">hello</textinput>
-		<log id="messages" align="bottom" height="20%">
+		<log id="messages" align="bottom" height="20%%">
 			Welcome to [game]
 			a
 			b
