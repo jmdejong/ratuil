@@ -1,7 +1,7 @@
 
 from . import Widget
-from window import Window
-from textstyle import TextStyle
+from ..window import Window
+from ..textstyle import TextStyle
 
 class Border(Widget):
 	

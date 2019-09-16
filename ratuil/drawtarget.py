@@ -1,5 +1,5 @@
 
-from constants import INT_INFINITY
+from .constants import INT_INFINITY
 
 class DrawTarget:
 	

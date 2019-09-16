@@ -1,6 +1,6 @@
 
 from . import Widget
-from textstyle import TextStyle
+from ..textstyle import TextStyle
 
 class TextInput(Widget):
 	

@@ -1,10 +1,11 @@
 
 import sys
 import shutil
-from constants import INT_INFINITY
-from drawtarget import DrawTarget
-from textstyle import TextStyle
-import util
+
+from .constants import INT_INFINITY
+from .drawtarget import DrawTarget
+from .textstyle import TextStyle
+from . import util
 
 
 class Attr:

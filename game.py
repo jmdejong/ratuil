@@ -1,11 +1,11 @@
 #!/usr/bin/env -S python3 -u
 
 
-from bufferedscreen import BufferedScreen
-from screen import Screen
-from layout import Layout
-from textstyle import TextStyle
-from pad import Pad
+from ratuil.bufferedscreen import BufferedScreen
+from ratuil.screen import Screen
+from ratuil.layout import Layout
+from ratuil.textstyle import TextStyle
+from ratuil.pad import Pad
 
 
 import shutil

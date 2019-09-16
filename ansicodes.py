@@ -7,15 +7,15 @@ import signal
 
 
 
-from screen import Screen
-from bufferedscreen import BufferedScreen
-from constants import INT_INFINITY
-from pad import Pad
-from style import Style
-from window import Window
-from widgets.textbox import TextBox
-from widgets.charbox import CharBox
-from widgets.hbox import HBox
+from .screen import Screen
+from .bufferedscreen import BufferedScreen
+from .constants import INT_INFINITY
+from .pad import Pad
+from .style import Style
+from .window import Window
+from .widgets.textbox import TextBox
+from .widgets.charbox import CharBox
+from .widgets.hbox import HBox
 
 
 

@@ -1,7 +1,7 @@
 
 from . import Widget
-from textstyle import TextStyle
-import util
+from .. textstyle import TextStyle
+from .. import util
 
 class Bar(Widget):
 	

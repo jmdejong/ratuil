@@ -1,6 +1,6 @@
 
 from . import Widget
-from pad import Pad
+from ..pad import Pad
 
 class Field(Widget):
 	

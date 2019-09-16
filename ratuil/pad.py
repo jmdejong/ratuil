@@ -1,6 +1,6 @@
 
-from constants import INT_INFINITY
-from drawtarget import DrawTarget
+from .constants import INT_INFINITY
+from .drawtarget import DrawTarget
 
 
 class Pad(DrawTarget):

@@ -3,11 +3,11 @@
 import sys
 import io
 
-from constants import INT_INFINITY
-from screen import Screen
-from pad import Pad
-from drawtarget import DrawTarget
-import util
+from .constants import INT_INFINITY
+from .screen import Screen
+from .pad import Pad
+from .drawtarget import DrawTarget
+from . import util
 
 
 

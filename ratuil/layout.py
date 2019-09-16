@@ -1,15 +1,15 @@
 
-from boxstyle import BoxStyle
-from widgets.textbox import TextBox
-from widgets.charbox import CharBox
-from widgets.hbox import HBox
-from widgets.vbox import VBox
-from widgets.listing import Listing
-from widgets.border import Border
-from widgets.log import Log
-from widgets.textinput import TextInput
-from widgets.field import Field
-from widgets.bar import Bar
+from .boxstyle import BoxStyle
+from .widgets.textbox import TextBox
+from .widgets.charbox import CharBox
+from .widgets.hbox import HBox
+from .widgets.vbox import VBox
+from .widgets.listing import Listing
+from .widgets.border import Border
+from .widgets.log import Log
+from .widgets.textinput import TextInput
+from .widgets.field import Field
+from .widgets.bar import Bar
 
 import xml.etree.ElementTree as ET
 

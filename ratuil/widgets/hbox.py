@@ -1,6 +1,6 @@
 
 from .splitbox import SplitBox
-from window import Window
+from ..window import Window
 
 class HBox(SplitBox):
 	
