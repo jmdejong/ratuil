@@ -120,12 +120,10 @@ def main():
 	
 	layout = Layout(layouttext)
 	
-	buf = Pad(scr.width, scr.height)
-	
 	layout.set_target(scr)
 	layout.update(force=True)
 	
-	signal.signal(signal.SIGWINCH, (lambda signum, frame: (scr.reset(), buf.resize(scr.width, scr.height))))
+	signal.signal(signal.SIGWINCH, (lambda signum, frame: scr.reset()))
 	
 	tty.setraw(sys.stdin)
 	Screen.default.hide_cursor()
@@ -135,7 +133,6 @@ def main():
 	field = Field(200, 40)
 	while True:
 		draw(layout, field)
-		#scr.draw_pad(buf)
 		if hasattr(scr, "update"):
 			scr.update()
 		inp = get_key(do_interrupt=True)

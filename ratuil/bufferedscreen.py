@@ -11,8 +11,40 @@ from . import util
 
 
 
-
 class BufferedScreen(DrawTarget):
+	
+	def __init__(self, out=sys.stdout):
+		self.screen = RememberingScreen(out)
+		self.buff = Pad(self.screen.width, self.screen.height)
+	
+	@property
+	def width(self):
+		return self.screen.width
+	
+	@property
+	def height(self):
+		return self.screen.height
+	
+	def clear(self):
+		self.screen.clear()
+		self.buff = Pad(self.screen.width, self.screen.height)
+	
+	def reset(self):
+		self.screen.reset()
+		self.clear()
+	
+	def update(self):
+		self.screen.draw_pad(self.buff)
+		self.screen.update()
+	
+	def write(self, x, y, text, style=None):
+		self.buff.write(x, y, text, style)
+	
+	def draw_pad(self, pad, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
+		self.buff.draw_pad(pad, dest_x, dest_y, width, height, src_x, src_y)
+
+
+class RememberingScreen(DrawTarget):
 	
 	def __init__(self, out=sys.stdout):
 		self.out = out
@@ -49,11 +81,6 @@ class BufferedScreen(DrawTarget):
 		self.screen.style(style, self.style)
 		self.style = style
 		self.screen.addstr(text)
-	
-	def redraw(self):
-		self.screen.clear()
-		self.screen.draw_pad(self.on_screen)
-		self.update()
 	
 	def draw_pad_direct(self, *args, **kwargs):
 		self.on_screen.draw_pad(*args, **kwargs)
