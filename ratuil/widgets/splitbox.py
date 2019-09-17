@@ -5,7 +5,6 @@ class SplitBox(Widget):
 	
 	def __init__(self, children, etree):
 		self.children = children
-		self.etree = etree
 	
 	def is_changed(self):
 		return False

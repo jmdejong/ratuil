@@ -16,5 +16,10 @@ class TextInput(Widget):
 	def draw(self, target):
 		target.clear()
 		target.write(0, 0, self.text[:target.width])
-		if isinstance(self.cursor, int) and self.cursor >= 0 and self.cursor <= len(self.text):
-			target.write(min(self.cursor, target.width - 1), 0, self.text[self.cursor], TextStyle(reverse=True))
+		if isinstance(self.cursor, int) and self.cursor >= 0 and self.cursor < target.width:
+			
+			if self.cursor < len(self.text):
+				c = self.text[self.cursor]
+			else:
+				c = ' '
+			target.write(self.cursor, 0, c, TextStyle(reverse=True))

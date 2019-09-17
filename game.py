@@ -6,6 +6,7 @@ from ratuil.screen import Screen
 from ratuil.layout import Layout
 from ratuil.textstyle import TextStyle
 from ratuil.pad import Pad
+from ratuil.inputs import get_key
 
 
 import shutil
@@ -77,6 +78,7 @@ class Player:
 		self.y = y
 		self.inventory = ["sword", "food", "axe"]
 		self.inventory_selector = 0
+		self.switch_selector = 0
 	
 	
 	def update(self, field, key):
@@ -87,6 +89,9 @@ class Player:
 			self.y = new_y
 		self.inventory_selector += (key == "+") - (key == "-")
 		self.inventory_selector %= len(self.inventory)
+		
+		self.switch_selector += (key == "*")
+		self.switch_selector %= 2
 
 
 def draw(layout, field):
@@ -101,6 +106,8 @@ def draw(layout, field):
 	inv = layout.get("inventory")
 	inv.set_items(player.inventory)
 	inv.select(player.inventory_selector)
+	switch = layout.get("menus")
+	switch.select(player.switch_selector)
 	layout.update()
 	
 
@@ -120,10 +127,10 @@ def main():
 	
 	signal.signal(signal.SIGWINCH, (lambda signum, frame: (scr.reset(), buf.resize(scr.width, scr.height))))
 	
-	tty.setcbreak(sys.stdin)
+	tty.setraw(sys.stdin)
 	Screen.default.hide_cursor()
 	
-	#layout.get("input").set_text("hello", 3)
+	layout.get("input").set_text("hello", 5)
 	
 	field = Field(200, 40)
 	while True:
@@ -131,8 +138,10 @@ def main():
 		#scr.draw_pad(buf)
 		if hasattr(scr, "update"):
 			scr.update()
-		inp = sys.stdin.read(1)
-		layout.get("messages").add_message(str(ord(inp)) + ": " + inp)
+		inp = get_key(do_interrupt=True)
+		#if inp == "^C":
+			#break
+		layout.get("messages").add_message(str(ord(inp[0])) + ": " + inp)
 		field.update(inp)
 
 

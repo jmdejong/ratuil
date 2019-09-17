@@ -17,9 +17,6 @@ class Listing(Widget):
 		self.change()
 	
 	def draw(self, target):
-		#lines = [line[:target.width] for line in self.items][:target.height]
-		#for y, line in enumerate(lines):
-			#target.write(0, y, line)
 		target.clear()
 		width = target.width
 		height = target.height

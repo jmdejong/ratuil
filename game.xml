@@ -2,13 +2,23 @@
 <hbox>
 	<vbox width="20" align="right">
 		<bar id="health" height="2" full-char="+" empty-char="-" full-style="fg:1; bg:2" empty-style="fg:2; bg: 1;" total="10" filled="8"></bar>
-		<border>
-			<listing id="inventory">
-				milk
-				eggs
-				bread
-			</listing>
-		</border>
+		<switchbox id="menus">
+			<border>
+				<listing id="inventory">
+					milk
+					eggs
+					bread
+				</listing>
+			</border>
+			<border char="#">
+				<listing id="equipment">
+					cotton underwear
+					cotton shirt
+					jeans
+					friendship bracelet
+				</listing>
+			</border>
+		</switchbox>
 	</vbox>
 	<vbox>
 		<textinput id="input" align="bottom" height="1">hello</textinput>

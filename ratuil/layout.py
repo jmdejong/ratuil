@@ -10,6 +10,7 @@ from .widgets.log import Log
 from .widgets.textinput import TextInput
 from .widgets.field import Field
 from .widgets.bar import Bar
+from .widgets.switchbox import SwitchBox
 
 import xml.etree.ElementTree as ET
 
@@ -23,7 +24,8 @@ widgets = {
 	"log": Log,
 	"textinput": TextInput,
 	"field": Field,
-	"bar": Bar
+	"bar": Bar,
+	"switchbox": SwitchBox
 }
 
 
