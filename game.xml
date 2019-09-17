@@ -14,18 +14,6 @@
 		<textinput id="input" align="bottom" height="1">hello</textinput>
 		<log id="messages" align="bottom" height="20%%">
 			Welcome to [game]
-			a
-			b
-			c
-			d
-			e
-			f
-			g
-			h
-			i
-			j
-			k
-			l
 		</log>
 		<border style=" bg: 14;fg: 1">
 			<field id="field" char-size="2"></field>

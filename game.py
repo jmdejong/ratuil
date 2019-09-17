@@ -115,7 +115,7 @@ def main():
 	
 	buf = Pad(scr.width, scr.height)
 	
-	layout.set_target(buf)
+	layout.set_target(scr)
 	layout.update(force=True)
 	
 	signal.signal(signal.SIGWINCH, (lambda signum, frame: (scr.reset(), buf.resize(scr.width, scr.height))))
@@ -123,15 +123,17 @@ def main():
 	tty.setcbreak(sys.stdin)
 	Screen.default.hide_cursor()
 	
-	layout.get("input").set_text("hello", 3)
+	#layout.get("input").set_text("hello", 3)
 	
 	field = Field(200, 40)
 	while True:
 		draw(layout, field)
-		scr.draw_pad(buf)
+		#scr.draw_pad(buf)
 		if hasattr(scr, "update"):
 			scr.update()
-		field.update(sys.stdin.read(1))
+		inp = sys.stdin.read(1)
+		layout.get("messages").add_message(str(ord(inp)) + ": " + inp)
+		field.update(inp)
 
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ class TextInput(Widget):
 		self.text = ""
 		self.cursor = -1
 
-	def set_text(self, text, cursor):
+	def set_text(self, text, cursor=-1):
 		self.text = text
 		self.cursor = cursor
 		self.change()
