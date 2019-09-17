@@ -5,7 +5,7 @@ class CharBox(Widget):
 	
 	def __init__(self, children, etree):
 		self.lines = []
-		self.set_text(etree.text)
+		self.set_text(etree.text or "")
 	
 	def set_text(self, text):
 		self.lines = text.splitlines()

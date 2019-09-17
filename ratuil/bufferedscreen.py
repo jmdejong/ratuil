@@ -72,6 +72,7 @@ class RememberingScreen(DrawTarget):
 	def update(self):
 		self.out.write(self.screen.out.getvalue())
 		self.screen.out = io.StringIO()
+		self.out.flush()
 	
 	def write(self, x, y, text, style=None):
 		text = text[:self.screen.width-x]

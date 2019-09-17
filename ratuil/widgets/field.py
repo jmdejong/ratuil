@@ -14,6 +14,10 @@ class Field(Widget):
 		self.changed = False
 		self.redraw = False
 	
+	def set_char_size(self, char_size):
+		self.char_size = char_size
+		self.pad = Pad(self.width * self.char_size, self.height)
+	
 	def set_size(self, width, height):
 		self.width = width
 		self.height = height

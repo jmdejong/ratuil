@@ -10,7 +10,7 @@ class Log(Widget):
 		self.scrolled_back = 0
 	
 	def add_message(self, message, style=None):
-		self.messages.append([message, style])
+		self.messages.append((message, style))
 		if self.scrolled_back:
 			self.scrolled_back += 1
 		self.change()

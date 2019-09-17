@@ -125,8 +125,6 @@ def main():
 	
 	signal.signal(signal.SIGWINCH, (lambda signum, frame: scr.reset()))
 	
-	tty.setraw(sys.stdin)
-	Screen.default.hide_cursor()
 	
 	layout.get("input").set_text("hello", 5)
 	
@@ -147,6 +145,8 @@ if __name__ == "__main__":
 	oldterm = termios.tcgetattr(fd)
 	exitreason = None
 	try:
+		tty.setraw(sys.stdin)
+		Screen.default.hide_cursor()
 		main()
 	except KeyboardInterrupt:
 		exitreason = "^C caught, goodbye"

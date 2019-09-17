@@ -118,6 +118,10 @@ class Screen(DrawTarget):
 		self.style(None)
 		self.move(0, self.height - 1)
 		self.show_cursor()
+		self.out.flush()
+	
+	def update(self):
+		pass
 	
 
 Screen.default = Screen()
