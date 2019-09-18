@@ -3,9 +3,9 @@ from . import Widget
 
 class CharBox(Widget):
 	
-	def __init__(self, children, etree):
+	def __init__(self, text=""):
 		self.lines = []
-		self.set_text(etree.text or "")
+		self.set_text(text)
 	
 	def set_text(self, text):
 		self.lines = text.splitlines()
@@ -16,5 +16,10 @@ class CharBox(Widget):
 		lines = [line[:target.width] for line in self.lines][:target.height]
 		for y, line in enumerate(lines):
 			target.write(0, y, line)
+	
+	@classmethod
+	def from_xml(cls, children, tree):
+		return cls(tree.text or "")
+	
 		
 			

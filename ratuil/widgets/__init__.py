@@ -25,3 +25,7 @@ class Widget:
 		if (self.is_changed() or force) and self.screen is not None:
 			self.draw(self.screen)
 			self.changed = False
+	
+	@classmethod
+	def from_xml(cls, children, tree):
+		raise NotImplementedError

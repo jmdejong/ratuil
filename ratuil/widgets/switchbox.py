@@ -3,12 +3,9 @@ from . import Widget
 
 class SwitchBox(Widget):
 	
-	def __init__(self, children, etree):
+	def __init__(self, children, selected=0):
 		self.children = children
-		try:
-			self.selected = int(etree.attrib.get("selected", "0"))
-		except ValueError:
-			self.select(etree.attrib.get(selected))
+		self.select(selected)
 	
 	def select(self, selected):
 		if isinstance(selected, str):
@@ -29,3 +26,8 @@ class SwitchBox(Widget):
 			force = True
 			self.changed = False
 		self.children[self.selected].update(force)
+	
+	
+	@classmethod
+	def from_xml(cls, children, tree):
+		return cls(children, tree.attrib.get("selected", int(tree.attrib.get("selected-val", 0))))

@@ -5,8 +5,8 @@ import textwrap
 
 class Log(Widget):
 	
-	def __init__(self, children, etree):
-		self.messages = [(line.strip(), None) for line in etree.text.splitlines() if line.strip()]
+	def __init__(self, messages=None):
+		self.messages = list(messages or [])
 		self.scrolled_back = 0
 	
 	def add_message(self, message, style=None):
@@ -51,3 +51,11 @@ class Log(Widget):
 			target.write(width-1, 0, '-')
 		if moreDown:
 			target.write(width-1, height-1, '+')
+	
+	@classmethod
+	def from_xml(cls, children, tree):
+		if tree.text is not None:
+			messages = [(line.strip(), None) for line in tree.text.splitlines() if line.strip()]
+			return cls(messages)
+		else:
+			return cls()

@@ -6,21 +6,20 @@ from ..textstyle import TextStyle
 class Border(Widget):
 	
 	
-	def __init__(self, children, etree):
-		assert len(children) == 1
-		self.child = children[0]
+	def __init__(self, child, attr):
+		self.child = child
 		self.vertchar = "|"
 		self.horchar = "-"
 		self.cornerchar = "+"
-		self.style = TextStyle.from_str(etree.attrib.get("style"))
-		char = etree.attrib.get("char")
+		self.style = TextStyle.from_str(attr.get("style"))
+		char = attr.get("char")
 		if char is not None:
 			self.vertchar = char
 			self.horchar = char
 			self.cornerchar = char
-		self.vertchar = etree.attrib.get("vertchar", self.vertchar)
-		self.horchar = etree.attrib.get("horchar", self.horchar)
-		self.cornerchar = etree.attrib.get("cornerchar", self.cornerchar)
+		self.vertchar = attr.get("vertchar", self.vertchar)
+		self.horchar = attr.get("horchar", self.horchar)
+		self.cornerchar = attr.get("cornerchar", self.cornerchar)
 		assert len(self.horchar) == 1
 		assert len(self.vertchar) == 1
 		assert len(self.cornerchar) == 1
@@ -47,3 +46,9 @@ class Border(Widget):
 		for y in range(1, target.height - 1):
 			target.write(0, y, self.vertchar, self.style)
 			target.write(target.width-1, y, self.vertchar, self.style)
+
+	@classmethod
+	def from_xml(cls, children, tree):
+		assert len(children) == 1
+		return cls(children[0], tree.attrib)
+	

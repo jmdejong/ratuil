@@ -4,7 +4,7 @@ from ..textstyle import TextStyle
 
 class TextInput(Widget):
 	
-	def __init__(self, children, etree):
+	def __init__(self):
 		self.text = ""
 		self.cursor = -1
 
@@ -23,3 +23,7 @@ class TextInput(Widget):
 			else:
 				c = ' '
 			target.write(self.cursor, 0, c, TextStyle(reverse=True))
+	
+	@classmethod
+	def from_xml(cls, children, tree):
+		return cls()

@@ -5,10 +5,10 @@ from ..pad import Pad
 class Field(Widget):
 	
 	
-	def __init__(self, children, etree):
-		self.width = 0
-		self.height = 0
-		self.char_size = int(etree.attrib.get("char-size", 1))
+	def __init__(self, width=0, height=0, char_size=1):
+		self.width = width
+		self.height = height
+		self.char_size = char_size
 		self.pad = Pad(self.width * self.char_size, self.height)
 		self.center = (0, 0)
 		self.changed = False
@@ -52,3 +52,8 @@ class Field(Widget):
 			dest_x = max(0, (target.width - self.pad.width) // 2),
 			dest_y = max(0, (target.height - self.pad.height) // 2)
 		)
+	
+	@classmethod
+	def from_xml(cls, children, tree):
+		
+		return cls(char_size=int(tree.attrib.get("char-size", 1)))

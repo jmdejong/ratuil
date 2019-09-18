@@ -4,9 +4,9 @@ import textwrap
 
 class TextBox(Widget):
 	
-	def __init__(self, children, etree):
+	def __init__(self, text=""):
 		self.lines = []
-		self.set_text(etree.text or "")
+		self.set_text(text)
 	
 	def set_text(self, text):
 		self.lines = text.splitlines()
@@ -20,5 +20,7 @@ class TextBox(Widget):
 		
 		for y, line in enumerate(lines[:target.height]):
 			target.write(0, y, line)
-		
-			
+	
+	@classmethod
+	def from_xml(cls, children, tree):
+		return cls(tree.text or "")
