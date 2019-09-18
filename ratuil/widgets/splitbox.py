@@ -6,13 +6,10 @@ class SplitBox(Widget):
 	def __init__(self, children):
 		self.children = children
 	
-	def is_changed(self):
-		return False
-	
 	def resize(self, target):
 		raise NotImplementedError
 	
-	def update(self, force=False):
+	def update(self, target, force=False):
 		for child in self.children:
 			child.update(force)
 	

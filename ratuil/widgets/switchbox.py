@@ -11,7 +11,7 @@ class SwitchBox(Widget):
 		if isinstance(selected, str):
 			key = selected.casefold()
 			for i, child in enumerate(self.children):
-				if child.box_style.key == key:
+				if child.key == key:
 					selected = i
 					break
 		self.selected = selected
@@ -21,10 +21,10 @@ class SwitchBox(Widget):
 		for child in self.children:
 			child.resize(target)
 	
-	def update(self, force):
+	def update(self, target, force):
 		if self.is_changed():
 			force = True
-			self.changed = False
+			self.unchange()
 		self.children[self.selected].update(force)
 	
 	

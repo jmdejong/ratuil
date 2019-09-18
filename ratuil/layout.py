@@ -1,7 +1,8 @@
 
 import os.path
 
-from .boxstyle import BoxStyle
+from .screenelement import ScreenElement
+
 from .widgets.textbox import TextBox
 from .widgets.charbox import CharBox
 from .widgets.hbox import HBox
@@ -30,8 +31,6 @@ widgets = {
 	"switchbox": SwitchBox
 }
 
-
-
 class Layout:
 	
 	def __init__(self, tree, basepath=""):
@@ -46,10 +45,10 @@ class Layout:
 	def build_layout(self, etree):
 		children = [self.build_layout(child) for child in etree]
 		widget = widgets[etree.tag].from_xml(children, etree.attrib, etree.text)
-		widget.set_box_style(BoxStyle.from_attrs(etree.attrib))
-		if "id" in etree.attrib:
-			self.id_elements[etree.attrib["id"]] = widget
-		return widget
+		se = ScreenElement(widget, etree.attrib)
+		if se.id is not None:
+			self.id_elements[se.id] = se
+		return se
 	
 	def set_target(self, target):
 		self.target = target
@@ -69,7 +68,7 @@ class Layout:
 		self.layout.update(force)
 	
 	def get(self, id):
-		return self.id_elements.get(id)
+		return self.id_elements.get(id).widget
 	
 	@classmethod
 	def from_xml_str(cls, string, basepath=""):

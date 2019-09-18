@@ -33,11 +33,11 @@ class Border(Widget):
 			self.child.resize(win)
 			self.change()
 	
-	def update(self, force=False):
-		if (self.is_changed() or force) and self.screen is not None:
-			#raise Exception(self.is_changed(), self.screen)
-			self.draw(self.screen)
-			self.changed = False
+	def update(self, target, force=False):
+		if self.is_changed() or force:
+			self.draw(target)
+			force = True
+			self.unchange()
 		self.child.update(force)
 		
 	def draw(self, target):

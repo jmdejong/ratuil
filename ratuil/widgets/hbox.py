@@ -16,12 +16,9 @@ class HBox(SplitBox):
 				child.resize(None)
 				continue
 			width = end - start
-			if child.box_style.width is not None:
-				width = min(width, child.box_style.width.to_actual_value(target.width, width))
-			if width <= 0:
-				child.resize(None)
-				continue
-			if child.box_style.align_right:
+			if child.style.width is not None:
+				width = min(width, child.style.width.to_actual_value(target.width, width))
+			if child.style.align_right:
 				win = Window(target, end - width, 0, width, target.height)
 				end -= width
 			else:

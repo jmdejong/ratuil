@@ -4,27 +4,24 @@
 
 class Widget:
 	
-	changed = True
-	screen = None
-	box_style = None
+	_changed = True
 	
 	def change(self):
-		self.changed = True
-	
-	def set_box_style(self, style):
-		self.box_style = style
+		self._changed = True
 	
 	def is_changed(self):
-		return self.changed
+		return self._changed
+	
+	def unchange(self):
+		self._changed = False
 	
 	def resize(self, screen):
-		self.screen = screen
-		self.change()
+		pass
 	
-	def update(self, force=False):
-		if (self.is_changed() or force) and self.screen is not None:
-			self.draw(self.screen)
-			self.changed = False
+	def update(self, target, force=False):
+		if self.is_changed() or force:
+			self.draw(target)
+			self.unchange()
 	
 	@classmethod
 	def from_xml(cls, children, attr, text):
