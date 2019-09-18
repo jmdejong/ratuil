@@ -88,7 +88,7 @@ class Screen(DrawTarget):
 	
 	def draw_pad(self, pad, scr_x=0, scr_y=0, width=INT_INFINITY, height=INT_INFINITY, pad_x=0, pad_y=0):
 		screen = self
-		width = min(width, (screen.width - scr_x)// pad.char_width, pad.width - pad_x)
+		width = min(width, screen.width - scr_x, pad.width - pad_x)
 		height = min(height, screen.height - scr_y, pad.height - pad_y)
 		last_style = None
 		for y in range(height):
@@ -97,7 +97,7 @@ class Screen(DrawTarget):
 			line_y = pad_y + y
 			for cell in pad.get_line(pad_x, line_y, width):
 				if cell is None:
-					skip += pad.char_width
+					skip += 1
 					continue
 				if skip != 0:
 					screen.skip(skip)

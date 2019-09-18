@@ -25,7 +25,6 @@ class Border(Widget):
 		assert len(self.cornerchar) == 1
 	
 	def resize(self, target):
-		self.screen = target
 		if target is None:
 			self.child.resize(None)
 		else:

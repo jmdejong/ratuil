@@ -14,6 +14,8 @@ from .widgets.textinput import TextInput
 from .widgets.field import Field
 from .widgets.bar import Bar
 from .widgets.switchbox import SwitchBox
+from .widgets.box import Box
+from .widgets.fill import Fill
 
 import xml.etree.ElementTree as ET
 
@@ -28,7 +30,9 @@ widgets = {
 	"textinput": TextInput,
 	"field": Field,
 	"bar": Bar,
-	"switchbox": SwitchBox
+	"switchbox": SwitchBox,
+	"box": Box,
+	"fill": Fill
 }
 
 class Layout:

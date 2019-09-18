@@ -5,10 +5,9 @@ from .drawtarget import DrawTarget
 
 class Pad(DrawTarget):
 	
-	def __init__(self, width, height, char_width=1):
+	def __init__(self, width, height):
 		self.width = width
 		self.height = height
-		self.char_width = char_width
 		self.clear()
 	
 	def resize(self, width, height):
@@ -28,8 +27,10 @@ class Pad(DrawTarget):
 		for i, char in enumerate(text):
 			if x + i >= self.width:
 				break
-			self.data[x+i+y*self.width] = (style, char)
+			self.set_char(x + i, y, char, style)
 	
+	def set_char(self, x, y, char, style=None):
+		self.data[x + y * self.width] = (style, char)
 	
 	def get(self, x, y):
 		if y >= self.height or x >= self.width:

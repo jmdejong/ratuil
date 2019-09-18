@@ -137,7 +137,7 @@ class TextStyle:
 			if attr == "bg" and int(value) in TextStyle.COLORS:
 				bg = int(value)
 			if attr in TextStyle.ATTRIBUTES:
-				attr[attr] = True
+				attrs[attr] = True
 		return cls(fg, bg, **attrs)
 	
 

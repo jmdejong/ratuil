@@ -21,7 +21,7 @@ sprites = {
 	"floor": ("＿", TextStyle(3)),
 	"wall": ("Ｘ", TextStyle(7,8)),
 	"coin": ("ｃ", TextStyle(11)),
-	"player": ("＠", TextStyle(12))
+	"player": ("}{", TextStyle(12))#"＠", TextStyle(12))
 }
 #sprites = {
 	#"floor": ("_", TextStyle(3)),

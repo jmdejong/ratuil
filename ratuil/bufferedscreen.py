@@ -91,8 +91,9 @@ class RememberingScreen(DrawTarget):
 	def draw_pad(self, pad, dest_x=0, dest_y=0, width=INT_INFINITY, height=INT_INFINITY, src_x=0, src_y=0):
 		# Optimizes on the amount of characters to write to the terminal, which is more crucial in applications running over a network connection (like ssh)
 		# This will only draw the changed characters
-		width = min(width, (self.screen.width - dest_x) // pad.char_width, pad.width - src_x)
+		width = min(width, self.screen.width - dest_x, pad.width - src_x)
 		height = min(height, self.screen.height - dest_y, pad.height - src_y)
+		
 		
 		BEGIN = "BEGIN" # before anything on the line has been done
 		RUNNING = "RUNNING" # while changing current characters
@@ -137,7 +138,7 @@ class RememberingScreen(DrawTarget):
 						# start the first run
 						if state == BEGIN:
 							skip = 0
-							self.screen.move(dest_x + x*pad.char_width, dest_y + y)
+							self.screen.move(dest_x + x, dest_y + y)
 						#else:
 							#self.screen.skip(skip)#x-cursor_x)
 							#skip = 0
@@ -151,7 +152,10 @@ class RememberingScreen(DrawTarget):
 							self.screen.style(buff_style, self.style)
 							self.style = buff_style
 							self.screen.addstr(buff_char)
-							skip += 1 - util.charwidth(buff_char)
+							w = util.charwidth(buff_char)
+							if w == 2:
+								skip -= 1
+								self.on_screen.set_char(x + 1, y, None)
 							break
 						#cursor_x = x #+ util.char_width(buf_char) - 1
 						state = BETWEEN#POSTRUN
