@@ -115,10 +115,7 @@ def main():
 	scr = BufferedScreen()
 	scr.clear()
 	
-	with open("game.xml") as f:
-		layouttext = f.read()
-	
-	layout = Layout(layouttext)
+	layout = Layout.from_xml_file("game.xml")
 	
 	layout.set_target(scr)
 	layout.update(force=True)

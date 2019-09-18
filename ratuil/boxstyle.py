@@ -73,11 +73,11 @@ class BoxStyle():
 	
 	
 	@classmethod
-	def from_attrs(self, attrs):
+	def from_attrs(cls, attrs):
 		width = Value.parse(attrs.get("width", ""))
 		height = Value.parse(attrs.get("height", ""))
 		granularity = int(attrs.get("granularity", "1"))
 		align_right = ("right" in attrs.get("align", "").casefold() or "right" in attrs.get("hor-align", "").casefold())
 		align_bottom = ("bottom" in attrs.get("align", "").casefold() or "bottom" in attrs.get("vert-align", "").casefold())
 		key = attrs.get("key")
-		return BoxStyle(width, height, align_right, align_bottom, granularity, key)
+		return cls(width, height, align_right, align_bottom, granularity, key)

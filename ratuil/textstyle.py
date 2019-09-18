@@ -121,9 +121,9 @@ class TextStyle:
 		return self.attr[self.REVERSE]
 	
 	@classmethod
-	def from_str(self, text):
+	def from_str(cls, text):
 		if text is None:
-			return self.default
+			return TextStyle.default
 		fg = None
 		bg = None
 		attrs = {}
@@ -132,13 +132,13 @@ class TextStyle:
 			attr, _sep, value = part.partition(":")
 			attr = attr.strip().casefold()
 			value = value.strip()
-			if attr == "fg" and int(value) in self.COLORS:
+			if attr == "fg" and int(value) in TextStyle.COLORS:
 				fg = int(value)
-			if attr == "bg" and int(value) in self.COLORS:
+			if attr == "bg" and int(value) in TextStyle.COLORS:
 				bg = int(value)
-			if attr in self.ATTRIBUTES:
+			if attr in TextStyle.ATTRIBUTES:
 				attr[attr] = True
-		return TextStyle(fg, bg, **attrs)
+		return cls(fg, bg, **attrs)
 	
 
 TextStyle.default = TextStyle()

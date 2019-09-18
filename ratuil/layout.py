@@ -1,4 +1,6 @@
 
+import os.path
+
 from .boxstyle import BoxStyle
 from .widgets.textbox import TextBox
 from .widgets.charbox import CharBox
@@ -32,9 +34,9 @@ widgets = {
 
 class Layout:
 	
-	def __init__(self, xmllayout):
+	def __init__(self, tree, basepath=""):
 		
-		self.tree = ET.fromstring(xmllayout)
+		self.tree = tree
 		self.id_elements = {}
 		self.changed = True
 		self.target = None
@@ -68,4 +70,14 @@ class Layout:
 	
 	def get(self, id):
 		return self.id_elements.get(id)
+	
+	@classmethod
+	def from_xml_str(cls, string, basepath=""):
+		return cls(ET.fromstring(string), basepath)
+	
+	@classmethod
+	def from_xml_file(cls, fname, basepath=None):
+		if basepath is None:
+			basepath = os.path.dirname(fname)
+		return cls(ET.parse(fname).getroot(), basepath)
 	
