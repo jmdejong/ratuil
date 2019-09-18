@@ -27,9 +27,12 @@ class Border(Widget):
 	
 	def resize(self, target):
 		self.screen = target
-		win = Window(target, 1, 1, target.width - 2, target.height - 2)
-		self.child.resize(win)
-		self.change()
+		if target is None:
+			self.child.resize(None)
+		else:
+			win = Window(target, 1, 1, target.width - 2, target.height - 2)
+			self.child.resize(win)
+			self.change()
 	
 	def update(self, force=False):
 		if (self.is_changed() or force) and self.screen is not None:

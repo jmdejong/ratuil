@@ -13,6 +13,7 @@ class TextBox(Widget):
 		self.change()
 	
 	def draw(self, target):
+		target.clear()
 		lines = []
 		for line in self.lines:
 			lines.extend(textwrap.wrap(line, target.width))

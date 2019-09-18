@@ -12,6 +12,7 @@ class CharBox(Widget):
 		self.change()
 	
 	def draw(self, target):
+		target.clear()
 		lines = [line[:target.width] for line in self.lines][:target.height]
 		for y, line in enumerate(lines):
 			target.write(0, y, line)

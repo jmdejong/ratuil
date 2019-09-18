@@ -4,7 +4,10 @@ from . import Widget
 class Listing(Widget):
 	
 	def __init__(self, children, etree):
-		self.items = [line.strip() for line in etree.text.splitlines() if line.strip()]
+		if etree.text is not None:
+			self.items = [line.strip() for line in etree.text.splitlines() if line.strip()]
+		else:
+			self.items = []
 		self.selector = int(etree.attrib.get("select", "0"))
 		self.selector_char = etree.attrib.get("selector", "*")
 	

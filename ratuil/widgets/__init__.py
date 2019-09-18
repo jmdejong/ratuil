@@ -6,7 +6,7 @@ class Widget:
 	
 	changed = True
 	screen = None
-	style = None
+	box_style = None
 	
 	def change(self):
 		self.changed = True

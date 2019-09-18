@@ -48,5 +48,7 @@ class Field(Widget):
 				self._round_width(center_x * self.char_size - target.width // 2)
 			)),
 			src_y = max(0, min(self.pad.height - target.height, center_y - target.height // 2)),
-			width = self._round_width(target.width)
+			width = self._round_width(target.width),
+			dest_x = max(0, (target.width - self.pad.width) // 2),
+			dest_y = max(0, (target.height - self.pad.height) // 2)
 		)
