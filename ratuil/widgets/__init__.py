@@ -27,5 +27,5 @@ class Widget:
 			self.changed = False
 	
 	@classmethod
-	def from_xml(cls, children, tree):
+	def from_xml(cls, children, attr, text):
 		raise NotImplementedError

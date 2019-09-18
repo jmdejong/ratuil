@@ -25,5 +25,5 @@ class TextInput(Widget):
 			target.write(self.cursor, 0, c, TextStyle(reverse=True))
 	
 	@classmethod
-	def from_xml(cls, children, tree):
+	def from_xml(cls, children, attr, text):
 		return cls()

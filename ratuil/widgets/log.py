@@ -53,9 +53,9 @@ class Log(Widget):
 			target.write(width-1, height-1, '+')
 	
 	@classmethod
-	def from_xml(cls, children, tree):
-		if tree.text is not None:
-			messages = [(line.strip(), None) for line in tree.text.splitlines() if line.strip()]
+	def from_xml(cls, children, attr, text):
+		if text is not None:
+			messages = [(line.strip(), None) for line in text.splitlines() if line.strip()]
 			return cls(messages)
 		else:
 			return cls()

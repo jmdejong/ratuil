@@ -27,7 +27,6 @@ class Listing(Widget):
 		start = min(self.selector - height//2, len(self.items) - height)
 		start = max(start, 0)
 		end = start + height
-		#win.erase()
 		for i, item in enumerate(self.items[start:end]):
 			if i + start == self.selector:
 				target.write(0, i, self.selector_char)
@@ -38,14 +37,14 @@ class Listing(Widget):
 			target.write(width-1, 0, "-")
 		
 	@classmethod
-	def from_xml(cls, children, tree):
+	def from_xml(cls, children, attr, text):
 		kwargs = {}
-		if tree.text is not None:
-			kwargs["items"] = [line.strip() for line in tree.text.splitlines() if line.strip()]
-		if "select" in tree.attrib:
-			kwargs["selected"] = int(tree.attrib["select"])
-		if "selector" in tree.attrib:
-			kwargs["selector_char"] = tree.attrib["selector"]
+		if text is not None:
+			kwargs["items"] = [line.strip() for line in text.splitlines() if line.strip()]
+		if "select" in attr:
+			kwargs["selected"] = int(attr["select"])
+		if "selector" in attr:
+			kwargs["selector_char"] = attr["selector"]
 		return cls(**kwargs)
 
 		

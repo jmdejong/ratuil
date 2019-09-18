@@ -45,7 +45,7 @@ class Layout:
 		
 	def build_layout(self, etree):
 		children = [self.build_layout(child) for child in etree]
-		widget = widgets[etree.tag].from_xml(children, etree)
+		widget = widgets[etree.tag].from_xml(children, etree.attrib, etree.text)
 		widget.set_box_style(BoxStyle.from_attrs(etree.attrib))
 		if "id" in etree.attrib:
 			self.id_elements[etree.attrib["id"]] = widget

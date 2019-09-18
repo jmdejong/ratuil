@@ -36,6 +36,6 @@ class Bar(Widget):
 		target.write(bar_end, 1, self.empty_char[0]*(width - bar_end), self.empty_style)
 	
 	@classmethod
-	def from_xml(cls, children, tree):
-		return cls(tree.attrib)
+	def from_xml(cls, children, attr, text):
+		return cls(attr)
 	

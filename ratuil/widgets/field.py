@@ -54,6 +54,5 @@ class Field(Widget):
 		)
 	
 	@classmethod
-	def from_xml(cls, children, tree):
-		
-		return cls(char_size=int(tree.attrib.get("char-size", 1)))
+	def from_xml(cls, children, attr, text):
+		return cls(char_size=int(attr.get("char-size", 1)))

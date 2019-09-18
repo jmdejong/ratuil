@@ -48,7 +48,7 @@ class Border(Widget):
 			target.write(target.width-1, y, self.vertchar, self.style)
 
 	@classmethod
-	def from_xml(cls, children, tree):
+	def from_xml(cls, children, attr, text):
 		assert len(children) == 1
-		return cls(children[0], tree.attrib)
+		return cls(children[0], attr)
 	

@@ -17,5 +17,5 @@ class SplitBox(Widget):
 			child.update(force)
 	
 	@classmethod
-	def from_xml(cls, children, tree):
+	def from_xml(cls, children, attr, text):
 		return cls(children)

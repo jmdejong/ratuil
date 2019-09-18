@@ -29,5 +29,5 @@ class SwitchBox(Widget):
 	
 	
 	@classmethod
-	def from_xml(cls, children, tree):
-		return cls(children, tree.attrib.get("selected", int(tree.attrib.get("selected-val", 0))))
+	def from_xml(cls, children, attr, text):
+		return cls(children, attr.get("selected", int(attr.get("selected-val", 0))))

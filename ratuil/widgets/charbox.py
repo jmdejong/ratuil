@@ -18,8 +18,8 @@ class CharBox(Widget):
 			target.write(0, y, line)
 	
 	@classmethod
-	def from_xml(cls, children, tree):
-		return cls(tree.text or "")
+	def from_xml(cls, children, attr, text):
+		return cls(text or "")
 	
 		
 			
