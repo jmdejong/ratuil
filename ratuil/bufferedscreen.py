@@ -114,9 +114,10 @@ class RememberingScreen(DrawTarget):
 			state = BEGIN
 			#self.style = None
 			#cursor_x = None
-			for x, (scr_cell, buff_cell) in enumerate(zip(
-					self.on_screen.get_line(dest_x, dest_y + y, width),
-					pad.get_line(src_x, src_y + y, width))):
+			for x, (buff_cell) in enumerate(pad.get_line(src_x, src_y + y, width)):#zip(
+					#self.on_screen.get_line(dest_x, dest_y + y, width),
+					#pad.get_line(src_x, src_y + y, width))):
+				scr_cell = self.on_screen.get(dest_x + x, dest_y + y)
 				if scr_cell is None:
 					scr_cell = (None, None)
 				scr_style, scr_char = scr_cell
@@ -152,10 +153,13 @@ class RememberingScreen(DrawTarget):
 							self.screen.style(buff_style, self.style)
 							self.style = buff_style
 							self.screen.addstr(buff_char)
+							self.on_screen.set_char(x, y, buff_char, buff_style)
 							w = util.charwidth(buff_char)
 							if w == 2:
 								skip -= 1
+								#self.on_screen.set_char(x + 2, y, None)
 								self.on_screen.set_char(x + 1, y, None)
+								#self.on_screen.set_char(x, y, None)
 							break
 						#cursor_x = x #+ util.char_width(buf_char) - 1
 						state = BETWEEN#POSTRUN
@@ -200,4 +204,4 @@ class RememberingScreen(DrawTarget):
 							#extra += 1
 							#postpost_run += buff_char
 							#break
-		self.on_screen.draw_pad(pad, dest_x, dest_y, width, height, src_x, src_y)
+		#self.on_screen.draw_pad(pad, dest_x, dest_y, width, height, src_x, src_y)

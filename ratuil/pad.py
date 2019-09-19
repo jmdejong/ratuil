@@ -2,6 +2,8 @@
 from .constants import INT_INFINITY
 from .drawtarget import DrawTarget
 
+from . import util
+
 
 class Pad(DrawTarget):
 	
@@ -31,6 +33,8 @@ class Pad(DrawTarget):
 	
 	def set_char(self, x, y, char, style=None):
 		self.data[x + y * self.width] = (style, char)
+		if isinstance(char, str) and util.charwidth(char) == 2:
+			self.data[x + y * self.width + 1] = None
 	
 	def get(self, x, y):
 		if y >= self.height or x >= self.width:

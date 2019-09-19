@@ -82,8 +82,8 @@ class Player:
 	
 	
 	def update(self, field, key):
-		new_x = self.x + (key == "d") - (key == "a")
-		new_y = self.y + (key == "s") - (key == "w")
+		new_x = self.x + (key in ("d", "right")) - (key in ("a", "left"))
+		new_y = self.y + (key in ("s", "down")) - (key in ("w", "up"))
 		if field.get(new_x, new_y) != "wall":
 			self.x = new_x
 			self.y = new_y
