@@ -16,12 +16,18 @@ class Widget:
 		self._changed = False
 	
 	def resize(self, screen):
-		pass
+		self.change()
 	
 	def update(self, target, force=False):
+		""" draw the widget onto target.
+		if force is false and the widget did not change since the previous update, don't do anything
+		return whether anything was drawn
+		"""
 		if self.is_changed() or force:
 			self.draw(target)
 			self.unchange()
+			return True
+		return False
 	
 	@classmethod
 	def from_xml(cls, children, attr, text):

@@ -50,7 +50,8 @@ class Screen(DrawTarget):
 			return
 		parts = []
 		reset = False
-		if style.fg is None or style.bg is None or previous is None or previous.bold and not style.bold:
+		# todo: generalize this
+		if style.fg is None or style.bg is None or previous is None or previous.bold and not style.bold or previous.underscore and not style.underscore or previous.reverse and not style.reverse:
 			parts.append(Attr.RESET)
 			reset = True
 		if style.fg is not None and (reset or style.fg != previous.fg):
@@ -61,7 +62,7 @@ class Screen(DrawTarget):
 			parts.append(Attr.BOLD)
 		if style.underscore and (reset or not previous.underscore):
 			parts.append(Attr.UNDERSCORE)
-		if style.reverse and (reset or not previous.bold):
+		if style.reverse and (reset or not previous.reverse):
 			parts.append(Attr.REVERSE)
 		ansistyle = "\033[" + ";".join(parts) + "m"
 		self.out.write(ansistyle)

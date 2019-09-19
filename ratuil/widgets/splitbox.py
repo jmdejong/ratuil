@@ -10,8 +10,10 @@ class SplitBox(Widget):
 		raise NotImplementedError
 	
 	def update(self, target, force=False):
+		changed = False
 		for child in self.children:
-			child.update(force)
+			changed = child.update(force) or changed
+		return changed
 	
 	@classmethod
 	def from_xml(cls, children, attr, text):

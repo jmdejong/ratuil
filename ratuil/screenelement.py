@@ -8,11 +8,13 @@ class ScreenElement:
 		self.style = BoxStyle.from_attrs(attr)
 		self.id = attr.get("id")
 		self.key = attr.get("key")
+		self.hidden = bool(attr.get("hidden", False))
 	
-	# temporary; until I changed all box_style into style
-	@property
-	def box_style(self):
-		return self.style
+	def hide(self):
+		self.hidden = True
+	
+	def show(self):
+		self.hidden = False
 	
 	def resize(self, target):
 		if target is not None and (target.width <= 0 or target.height <= 0):
@@ -21,5 +23,6 @@ class ScreenElement:
 		self.widget.resize(target)
 	
 	def update(self, force):
-		if self.target:
-			self.widget.update(self.target, force)
+		if self.target:# and not self.hidden:
+			return self.widget.update(self.target, force)
+		return False

@@ -25,7 +25,7 @@ class SwitchBox(Widget):
 		if self.is_changed():
 			force = True
 			self.unchange()
-		self.children[self.selected].update(force)
+		return self.children[self.selected].update(force) or force
 	
 	
 	@classmethod

@@ -4,7 +4,7 @@ from . import Widget
 class Box(Widget):
 	
 	# doesn't do anything
-	# This is just for when you want to separate attributes
+	# This is useful when you want to separate attributes
 	
 	def __init__(self, child):
 		self.child = child
@@ -13,7 +13,7 @@ class Box(Widget):
 		self.child.resize(target)
 	
 	def update(self, target, force=False):
-		self.child.update(force)
+		return self.child.update(force)
 
 	@classmethod
 	def from_xml(cls, children, attr, text):

@@ -37,7 +37,7 @@ class Border(Widget):
 			self.draw(target)
 			force = True
 			self.unchange()
-		self.child.update(force)
+		return self.child.update(force) or force
 		
 	def draw(self, target):
 		target.write(0, 0, self.cornerchar + self.horchar * (target.width - 2) + self.cornerchar, self.style)

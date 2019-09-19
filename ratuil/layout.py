@@ -16,6 +16,8 @@ from .widgets.bar import Bar
 from .widgets.switchbox import SwitchBox
 from .widgets.box import Box
 from .widgets.fill import Fill
+from .widgets.empty import Empty
+from .widgets.overlay import Overlay
 
 import xml.etree.ElementTree as ET
 
@@ -32,7 +34,9 @@ widgets = {
 	"bar": Bar,
 	"switchbox": SwitchBox,
 	"box": Box,
-	"fill": Fill
+	"fill": Fill,
+	"empty": Empty,
+	"overlay": Overlay
 }
 
 class Layout:

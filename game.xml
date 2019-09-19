@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <hbox>
 	<vbox width="20" align="right">
-		<bar id="health" height="2" full-char="+" empty-char="-" full-style="fg:1; bg:2" empty-style="fg:2; bg: 1;" total="10" filled="8"></bar>
+		<bar id="health" height="2" full-char="+" empty-char="-" full-style="fg:7; bg:2" empty-style="fg:7; bg: 1;" total="10" filled="8"></bar>
 		<switchbox id="menus">
 			<border>
 				<listing id="inventory">
@@ -29,7 +29,12 @@
 			Welcome to [game]
 		</log>
 <!-- 		<border style=" bg: 14;fg: 1"> -->
-		<field id="field" char-size="2"></field>
+		<overlay>
+			<field id="field" char-size="2"></field>
+			<textbox offset-x="2" align="right" width="12" offset-y="1" height="1">
+				hello world
+			</textbox>
+		</overlay>
 <!-- 		</border> -->
 	</vbox>
 </hbox>
