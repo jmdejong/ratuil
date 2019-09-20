@@ -122,7 +122,7 @@ class Screen(DrawTarget):
 		self.out.flush()
 	
 	def update(self):
-		pass
+		self.out.flush()
 	
 
 Screen.default = Screen()

@@ -1,4 +1,4 @@
-#!/usr/bin/env -S python3 -u
+#!/usr/bin/env -S python3
 
 
 from ratuil.bufferedscreen import BufferedScreen
@@ -15,6 +15,7 @@ import signal
 import tty
 import sys
 import termios
+import os
 
 
 sprites = {
@@ -115,7 +116,8 @@ def main():
 	scr = BufferedScreen()
 	scr.clear()
 	
-	layout = Layout.from_xml_file("game.xml")
+	layoutfile = os.path.join(os.path.dirname(__file__), "game.xml")
+	layout = Layout.from_xml_file(layoutfile)
 	
 	layout.set_target(scr)
 	layout.update(force=True)
