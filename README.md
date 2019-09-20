@@ -136,25 +136,33 @@ Fill all available area with a pattern (or a single character).
 This could also be used to make a separator line within an hbox or vbox.
 
 
-## Code
+## Installing
 
-### targets
+    git clone https://github.com/jmdejong/ratuil.git
+    pip3 install -e ratuil/ --user
 
-There are several possible drawing targets
+## Usage
 
-Screen is a simple wrapper around ANSI code terminal controls.
 
-A Pad is a virtual drawing target. It can also be drawn on other targets
+	from ratuil.layout import Layout
+	from ratuil.bufferedscreen import BufferedScreen
+	
+	screen = BufferedScreen() // Make the screen. BufferedScreen is recommended, but other DrawTargets can be used too.
+	screen.clear()
 
-BufferedScreen is a wrapper around screen that tries to minimize the number of characters sent to the terminal.
-It is generally recommended to use this as the drawing target for the layout.
-
-A Window is region on another drawing target.
-
-### Layout
-
-The layout is the main entry point to the layout elements.
-It can be created from xml using the `Layout.from_xml_sting(string)` and `Layout.from_xml_file(filename)` constructors.
-
-Before it can draw it should get a drawing target which can be done with `Layout.set_target(target)`. The layout will get its size from the target.
+	layout = Layout.from_xml_file("layout.xml") // Load the layout from xml. This assumes that there is the file "layout.xml" in the current directory
+	
+	layout.set_target(screen) // Tell the layout that the screen is its target
+	layout.update() // Draw the layout to the buffered screen
+	screen.update() // Draw the buffer to the terminal
+	
+	
+	// change something:
+	log = layout.get("messages") // get the element with id "messages". For this example this is a log element.
+	log.add_message("hello world") // add a new message to the log
+	
+	
+	// draw again
+	layout.update()
+	screen.update()
 
