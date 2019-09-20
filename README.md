@@ -135,6 +135,7 @@ Draw a border around its child. Can only have one child
 Fill all available area with a pattern (or a single character).
 This could also be used to make a separator line within an hbox or vbox.
 
+### etc...
 
 ## Installing
 
@@ -166,3 +167,9 @@ This could also be used to make a separator line within an hbox or vbox.
 	layout.update()
 	screen.update()
 
+## Considerations
+
+Currently an element has the attributes for both the styling relative to its parent, and for its own parameters.
+It might be better to separate it.
+Options are including an in-between element for these styling things (which makes it more verbose) or putting the syling into a single attribute (just like css).
+I don't like either solution.
