@@ -23,4 +23,4 @@ class TextBox(Widget):
 	
 	@classmethod
 	def from_xml(cls, children, attr, text):
-		return cls(text.strip() or "")
+		return cls((text or "").strip())
