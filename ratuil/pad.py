@@ -26,21 +26,21 @@ class Pad(DrawTarget):
 	def write(self, x, y, text, style=None):
 		if y >= self.height:
 			return
-		if text is None:
-			self.set_char(x, y, text, style)
-			return
 		for char in text:
 			w = util.charwidth(char)
 			if x + w > self.width:
 				break
 			self.set_char(x, y, char, style)
 			if w == 2:
-				self.set_char(x + 1, y, None)
+				self.delete(x + 1, y)
 			x += w
 			
 	
 	def set_char(self, x, y, char, style=None):
 		self.data[x + y * self.width] = (style, char)
+	
+	def delete(self, x, y):
+		self.data[x + y * self.width] = None
 	
 	def get(self, x, y):
 		if y >= self.height or x >= self.width:
