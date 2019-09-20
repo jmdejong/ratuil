@@ -17,15 +17,15 @@ This is an example layout:
     <hbox>
         <vbox width="20" align="right">
             <bar id="health" height="2" full-char="+" empty-char="-" full-style="fg:7; bg:2" empty-style="fg:7; bg: 1;" total="10" filled="8"></bar>
-            <switchbox id="menus">
-                <border>
+            <switchbox id="menus" selected="equipment" height="50%">
+                <border key="inventory">
                     <listing id="inventory">
                         milk
                         eggs
                         bread
                     </listing>
                 </border>
-                <border char="#">
+                <border char="#" key="equipment">
                     <listing id="equipment">
                         cotton underwear
                         cotton shirt
@@ -34,12 +34,21 @@ This is an example layout:
                     </listing>
                 </border>
             </switchbox>
+            <border char=" ">
+                <textbox id="info">
+    This is a great place to show some information.
+    Textbox lines are wrapped!
+                </textbox>
+            </border>
         </vbox>
-        <fill width="2" align="right" style="fg:12;bg:4">
-            []
+        <fill width="1" align="right" style="fg:12;bg:4">
+            @
         </fill>
         <vbox>
-            <textinput id="input" align="bottom" height="1">hello</textinput>
+            <hbox align="bottom" height="1">
+                <charbox width="2">&gt;</charbox>
+                <textinput id="input"></textinput>
+            </hbox>
             <log id="messages" align="bottom" height="20%%">
                 Welcome to [game]
             </log>
@@ -47,7 +56,7 @@ This is an example layout:
                 <overlay>
                     <field id="field" char-size="2"></field>
                     <border offset-x="2" align="right" width="13" offset-y="1" height="3" style="reverse">
-                        <textbox>hello world</textbox>
+                        <charbox>hello world</charbox>
                     </border>
                 </overlay>
             </border>
@@ -56,26 +65,26 @@ This is an example layout:
 
 On a 80x20 screen it will show this output (but then with colours):
 
-    +--------------------------------------------------------+[] (8/10)             
-    |                                                        |[]++++++++++++++++----
-    |                                         +-----------+  |[]+------------------+
-    |                                         |hello world|  |[]|*milk             |
-    |                                         +-----------+  |[]| eggs             |
-    |                                                        |[]| bread            |
-    |                                                        |[]|                  |
-    |                                                        |[]|                  |
-    |                                                        |[]|                  |
-    |                                                        |[]|                  |
-    |                                                        |[]|                  |
-    |                                                        |[]|                  |
-    |                                                        |[]|                  |
-    |                                                        |[]|                  |
-    |                                                        |[]|                  |
-    +--------------------------------------------------------+[]|                  |
-                                                              []|                  |
-                                                              []|                  |
-    Welcome to [game]                                         []|                  |
-                                                              []+------------------+
+    +---------------------------------------------------------+@ (8/10)             
+    |                                                         |@++++++++++++++++----
+    |                                          +-----------+  |@####################
+    |                                          |hello world|  |@#*cotton underwear #
+    |                                          +-----------+  |@# cotton shirt     #
+    |                                                         |@# jeans            #
+    |                                                         |@# friendship bracel#
+    |                                                         |@#                  #
+    |                                                         |@#                  #
+    |                                                         |@#                  #
+    |                                                         |@#                  #
+    |                                                         |@####################
+    |                                                         |@                    
+    |                                                         |@ This is a great    
+    |                                                         |@ place to show some 
+    +---------------------------------------------------------+@ information.       
+                                                               @ Textbox lines are  
+                                                               @ wrapped!           
+    Welcome to [game]                                          @                    
+    >                                                          @                    
 
 The values of several elements can be changed from code.
 

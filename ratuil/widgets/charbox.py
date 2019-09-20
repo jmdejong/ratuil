@@ -19,7 +19,7 @@ class CharBox(Widget):
 	
 	@classmethod
 	def from_xml(cls, children, attr, text):
-		return cls(text or "")
+		return cls(text.strip() or "")
 	
 		
 			
