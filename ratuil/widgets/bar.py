@@ -1,7 +1,7 @@
 
 from . import Widget
 from .. textstyle import TextStyle
-from .. import util
+from ..strwidth import strwidth
 
 class Bar(Widget):
 	""" A bar (healthbar/mana bar/nutrition bar etc) that can be filled, empty, or something in between)"""
@@ -10,7 +10,7 @@ class Bar(Widget):
 		self.title = attr.get("title", "")
 		self.full_char = attr.get("full-char", "#")
 		self.empty_char = attr.get("empty-char", " ")
-		assert util.strwidth(self.full_char) == util.strwidth(self.empty_char) == 1
+		assert strwidth(self.full_char) == strwidth(self.empty_char) == 1
 		self.full_style = TextStyle.from_str(attr.get("full-style", ""))
 		self.empty_style = TextStyle.from_str(attr.get("empty-style", ""))
 		self.total = int(attr.get("total", "-1"))

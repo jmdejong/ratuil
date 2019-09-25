@@ -5,7 +5,7 @@ import shutil
 from .constants import INT_INFINITY
 from .drawtarget import DrawTarget
 from .textstyle import TextStyle
-from . import util
+from .strwidth import charwidth
 
 
 class Attr:
@@ -107,7 +107,7 @@ class Screen(DrawTarget):
 				screen.style(style, last_style)
 				last_style = style
 				screen.addstr(char)
-				skip += 1 - util.charwidth(char)
+				skip += 1 - charwidth(char)
 	
 	def hide_cursor(self):
 		self.out.write("\033[?25l")

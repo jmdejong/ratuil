@@ -7,7 +7,7 @@ from .constants import INT_INFINITY
 from .screen import Screen
 from .pad import Pad
 from .drawtarget import DrawTarget
-from . import util
+from .strwidth import charwidth
 
 
 
@@ -154,14 +154,14 @@ class RememberingScreen(DrawTarget):
 							self.style = buff_style
 							self.screen.addstr(buff_char)
 							self.on_screen.set_char(x, y, buff_char, buff_style)
-							w = util.charwidth(buff_char)
+							w = charwidth(buff_char)
 							if w == 2:
 								skip -= 1
 								#self.on_screen.set_char(x + 2, y, None)
 								self.on_screen.set_char(x + 1, y, None)
 								#self.on_screen.set_char(x, y, None)
 							break
-						#cursor_x = x #+ util.char_width(buf_char) - 1
+						#cursor_x = x #+ char_width(buf_char) - 1
 						state = BETWEEN#POSTRUN
 						extra = 0
 						post_run = ""

@@ -1,7 +1,7 @@
 
 from . import Widget
 from ..textstyle import TextStyle
-from .. import util
+from ..strwidth import strwidth
 import math
 
 class Fill(Widget):
@@ -10,14 +10,14 @@ class Fill(Widget):
 		self.set_filling(char, style)
 	
 	def set_filling(self, char, style=None):
-		assert util.strwidth(char) > 0
+		assert strwidth(char) > 0
 		self.char = char
 		self.style = style
 		self.change()
 	
 	def draw(self, target):
 		target.clear()
-		line = (self.char * math.ceil(target.width / util.strwidth(self.char)))[:target.width]
+		line = (self.char * math.ceil(target.width / strwidth(self.char)))[:target.width]
 		for y in range(target.height):
 			target.write(0, y, line, self.style)
 	

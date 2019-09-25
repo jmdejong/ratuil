@@ -2,7 +2,7 @@
 from .constants import INT_INFINITY
 from .drawtarget import DrawTarget
 
-from . import util
+from .strwidth import charwidth
 
 
 class Pad(DrawTarget):
@@ -27,7 +27,7 @@ class Pad(DrawTarget):
 		if y >= self.height:
 			return
 		for char in text:
-			w = util.charwidth(char)
+			w = charwidth(char)
 			if x + w > self.width:
 				break
 			self.set_char(x, y, char, style)
