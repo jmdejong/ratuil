@@ -7,7 +7,7 @@ layoutstring = """\
 <?xml version="1.0"?>
 <hbox>
 	<vbox width="20" align="right">
-		<bar id="health" height="2" full-char="+" empty-char="-" full-style="fg:7; bg:2" empty-style="fg:7; bg: 1;" total="10" filled="8"></bar>
+		<bar id="health" height="1" full-char="+" empty-char="-" full-style="fg:7; bg:2" empty-style="fg:7; bg: 1;" total="10" filled="8"></bar>
 		<switchbox id="menus" selected="equipment" height="50%">
 			<border key="inventory">
 				<listing id="inventory">
