@@ -39,7 +39,7 @@ def width_index(text, width):
 		if l + w > width:
 			return i
 		l += w
-	return i
+	return len(text)
 	
 def crop(text, width):
 	return text[:width_index(text, width)]
@@ -59,8 +59,8 @@ def wrap(text, width, separators=None):
 				last_sep = max(line.rfind(c, 0, cutoff) for c in separators)
 				if last_sep > 0:
 					cutoff = last_sep
-			lines += line[:cutoff]
-			line = line[cutoff:]
+			lines.append(line[:cutoff])
+			line = line[cutoff+1:]
 	return lines
 
 def wrap_words(text, width):

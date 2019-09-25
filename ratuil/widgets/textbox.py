@@ -1,6 +1,6 @@
 
 from . import Widget
-import textwrap
+from ..strwidth import wrap, wrap_words
 
 class TextBox(Widget):
 	
@@ -9,7 +9,7 @@ class TextBox(Widget):
 		self.set_text(text)
 		if wrap is None or wrap == "":
 			wrap = "crop"
-		assert wrap in {"crop", "words"}
+		assert wrap in {"crop", "words", "chars"}
 		self.wrap = wrap
 	
 	def set_text(self, text):
@@ -18,12 +18,15 @@ class TextBox(Widget):
 	
 	def draw(self, target):
 		target.clear()
+		lines = []
 		if self.wrap == "crop":
 			lines = [line[:target.width] for line in self.lines][:target.height]
-		elif self.wrap == "words":
-			lines = []
+		elif self.wrap == "chars":
 			for line in self.lines:
-				lines.extend(textwrap.wrap(line, target.width))
+				lines.extend(wrap(line, target.width))
+		elif self.wrap == "words":
+			for line in self.lines:
+				lines.extend(wrap_words(line, target.width))
 		
 		for y, line in enumerate(lines[:target.height]):
 			target.write(0, y, line)

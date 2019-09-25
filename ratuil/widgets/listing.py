@@ -1,5 +1,6 @@
 
 from . import Widget
+from ..strwidth import strwidth, crop
 
 class Listing(Widget):
 	
@@ -30,7 +31,7 @@ class Listing(Widget):
 		for i, item in enumerate(self.items[start:end]):
 			if i + start == self.selector:
 				target.write(0, i, self.selector_char)
-			target.write(len(self.selector_char), i, item)
+			target.write(strwidth(self.selector_char), i, item)
 		if end < len(self.items):
 			target.write(width-1, height-1, "+")
 		if start > 0:

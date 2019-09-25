@@ -2,6 +2,7 @@
 from . import Widget
 from ..window import Window
 from ..textstyle import TextStyle
+from ..strwidth import strwidth
 
 class Border(Widget):
 	
@@ -20,9 +21,9 @@ class Border(Widget):
 		self.vertchar = attr.get("vertchar", self.vertchar)
 		self.horchar = attr.get("horchar", self.horchar)
 		self.cornerchar = attr.get("cornerchar", self.cornerchar)
-		assert len(self.horchar) == 1
-		assert len(self.vertchar) == 1
-		assert len(self.cornerchar) == 1
+		assert strwidth(self.horchar) == 1
+		assert strwidth(self.vertchar) == 1
+		assert strwidth(self.cornerchar) == 1
 	
 	def resize(self, target):
 		if target is None:

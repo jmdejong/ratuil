@@ -1,7 +1,6 @@
 
 from . import Widget
-
-import textwrap
+from ..strwidth import wrap
 
 class Log(Widget):
 	
@@ -31,7 +30,7 @@ class Log(Widget):
 		lines = []
 		messages = self.messages
 		for message, style in messages:
-			for line in textwrap.wrap(message, width):
+			for line in wrap(message, width):
 				lines.append((line, style))
 		self.scrolled_back = max(min(self.scrolled_back, len(lines)-height), 0)
 		moreDown = False
