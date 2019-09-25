@@ -5,11 +5,6 @@ import unicodedata
 # taken from textwrap
 _whitespace = '\t\n\x0b\x0c\r '
 
-#class WideString:
-	
-	#def __init__(self, text):
-		#self.text = text
-
 
 
 def charwidth(char):
@@ -43,39 +38,28 @@ def width_index(text, width):
 	
 def crop(text, width):
 	return text[:width_index(text, width)]
-	
-	#def split(self, *args, **kwargs):
-		#return [WideString(word) for word in self.text.split(*args, **kwargs)]
-	
-	#def splitlines(self, *args, **kwargs):
-		#return [WideString(line) for line in self.text.splitlines(*args, **kwargs)]
 
 def wrap(text, width, separators=None):
 	lines = []
 	for line in text.splitlines():
-		while line:
+		while True:
 			cutoff = width_index(line, width)
+			if cutoff >= len(line):
+				lines.append(line)
+				break
 			if separators is not None:
-				last_sep = max(line.rfind(c, 0, cutoff) for c in separators)
+				last_sep = max(line.rfind(c, 0, cutoff+1) for c in separators)
 				if last_sep > 0:
+					import sys
+					print(cutoff, line[:cutoff], last_sep, line[:last_sep], file=sys.stderr)
 					cutoff = last_sep
 			lines.append(line[:cutoff])
-			line = line[cutoff+1:]
+			if separators is not None:
+				while line[cutoff] in separators:
+					cutoff += 1
+			line = line[cutoff:]
 	return lines
 
 def wrap_words(text, width):
 	return wrap(text, width, separators=_whitespace)
 
-		#lines = []
-		#line = lines
-		#words = self.split()
-		#while True:
-			#wi = width_index(text, width)
-		#l = 0
-		#last_sep = None
-		#for i, char in enumerate(self.text):
-			#w = charwidth(char)
-			#if l + w > width:
-				#return i
-			#l += w
-			
