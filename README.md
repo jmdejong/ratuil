@@ -13,6 +13,7 @@ Ratuil was originally created with [Asciifarm](https://github.com/jmdejong/ascii
 
 This is an example layout:
 
+    
     <?xml version="1.0"?>
     <hbox>
         <vbox width="20" align="right">
@@ -35,9 +36,9 @@ This is an example layout:
                 </border>
             </switchbox>
             <border char=" ">
-                <textbox id="info">
+                <textbox id="info" wrap="words">
     This is a great place to show some information.
-    Textbox lines are wrapped!
+    Textbox lines can be wrapped!
                 </textbox>
             </border>
         </vbox>
@@ -46,7 +47,7 @@ This is an example layout:
         </fill>
         <vbox>
             <hbox align="bottom" height="1">
-                <charbox width="2">&gt;</charbox>
+                <textbox width="2">&gt;</textbox>
                 <textinput id="input"></textinput>
             </hbox>
             <log id="messages" align="bottom" height="20%%">
@@ -56,7 +57,7 @@ This is an example layout:
                 <overlay>
                     <field id="field" char-size="2"></field>
                     <border offset-x="2" align="right" width="13" offset-y="1" height="3" style="reverse">
-                        <charbox>hello world</charbox>
+                        <textbox>hello world</textbox>
                     </border>
                 </overlay>
             </border>
@@ -113,11 +114,17 @@ Some of these are global.
 
 ### charbox
 
-The most basic element for showing text. It will show its given text (either in the xml or with the `set_text(text)` method) in the area that it has. Anything that goes outside of the available size will be cropped.
+
 
 ### textbox
 
-Similar to charbox, but when the text is to wide it will be wrapped instead of cropped.
+The most basic element for showing text.
+It will show its given text (either in the xml or with the `set_text(text)` method) in the area that it has.
+
+The 'wrap' attribute deals how overflow is handled.
+By default, or if the value is "crop" the overflow is cropped.
+If the value is "words" then the overflow is wrapped on whitespace (using `textwrap.wrap`).
+
 
 ### hbox
 

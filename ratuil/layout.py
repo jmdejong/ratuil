@@ -4,7 +4,6 @@ import os.path
 from .screenelement import ScreenElement
 
 from .widgets.textbox import TextBox
-from .widgets.charbox import CharBox
 from .widgets.hbox import HBox
 from .widgets.vbox import VBox
 from .widgets.listing import Listing
@@ -23,7 +22,6 @@ import xml.etree.ElementTree as ET
 
 widgets = {
 	"textbox": TextBox,
-	"charbox": CharBox,
 	"hbox": HBox,
 	"vbox": VBox,
 	"listing": Listing,

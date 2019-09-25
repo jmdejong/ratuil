@@ -3,7 +3,8 @@
 from ratuil.layout import Layout
 from ratuil.screen import Screen
 
-layoutstring = """<?xml version="1.0"?>
+layoutstring = """\
+<?xml version="1.0"?>
 <hbox>
 	<vbox width="20" align="right">
 		<bar id="health" height="2" full-char="+" empty-char="-" full-style="fg:7; bg:2" empty-style="fg:7; bg: 1;" total="10" filled="8"></bar>
@@ -25,9 +26,9 @@ layoutstring = """<?xml version="1.0"?>
 			</border>
 		</switchbox>
 		<border char=" ">
-			<textbox id="info">
+			<textbox id="info" wrap="words">
 This is a great place to show some information.
-Textbox lines are wrapped!
+Textbox lines can be wrapped!
 			</textbox>
 		</border>
 	</vbox>
@@ -36,7 +37,7 @@ Textbox lines are wrapped!
 	</fill>
 	<vbox>
 		<hbox align="bottom" height="1">
-			<charbox width="2">&gt;</charbox>
+			<textbox width="2">&gt;</textbox>
 			<textinput id="input"></textinput>
 		</hbox>
 		<log id="messages" align="bottom" height="20%%">
@@ -46,7 +47,7 @@ Textbox lines are wrapped!
 			<overlay>
 				<field id="field" char-size="2"></field>
 				<border offset-x="2" align="right" width="13" offset-y="1" height="3" style="reverse">
-					<charbox>hello world</charbox>
+					<textbox>hello world</textbox>
 				</border>
 			</overlay>
 		</border>

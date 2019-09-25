@@ -4,6 +4,7 @@ from .. textstyle import TextStyle
 from .. import util
 
 class Bar(Widget):
+	""" A bar (healthbar/mana bar/nutrition bar etc) that can be filled, empty, or something in between)"""
 	
 	def __init__(self, attr):
 		self.title = attr.get("title", "")
