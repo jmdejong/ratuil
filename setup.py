@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
 	name="ratuil",
-	version="0.0.1",
+	version="0.0.2",
 	author="troido",
 	author_email="troido@protonmail.com",
 	description="A terminal UI library for games",
