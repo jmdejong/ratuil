@@ -8,6 +8,7 @@ _whitespace = '\t\n\x0b\x0c\r '
 
 
 def charwidth(char):
+	""" The width of a single character. Ambiguous width is considered 1"""
 	eaw = unicodedata.east_asian_width(char)
 	if eaw == "Na" or eaw == "H":
 		return 1
@@ -20,6 +21,7 @@ def charwidth(char):
 	raise Exception("unknown east easian width for character {}: {}".format(ord(char), char))
 
 def strwidth(text):
+	""" The total width of a string """
 	return sum(charwidth(ch) for ch in text)
 
 
@@ -27,7 +29,7 @@ def width(text):
 	return stringwidth(text)
 	
 def width_index(text, width):
-	""" The largest index i for which the string is smaller than or equal to width """
+	""" The largest index i for which the strwidth(text[:i]) <= width """
 	l = 0
 	for i, char in enumerate(text):
 		w = charwidth(char)
@@ -50,8 +52,6 @@ def wrap(text, width, separators=None):
 			if separators is not None:
 				last_sep = max(line.rfind(c, 0, cutoff+1) for c in separators)
 				if last_sep > 0:
-					import sys
-					print(cutoff, line[:cutoff], last_sep, line[:last_sep], file=sys.stderr)
 					cutoff = last_sep
 			lines.append(line[:cutoff])
 			if separators is not None:

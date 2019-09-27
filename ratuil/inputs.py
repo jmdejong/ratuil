@@ -1,6 +1,5 @@
 
 import sys
-import string
 
 BACKSPACE = "backspace"
 ENTER = "enter"
@@ -45,7 +44,7 @@ def get_key(stream=sys.stdin, combine_escape=True, do_interrupt=False):
 			return "\\e" + name_char(nextchar)
 		last = stream.read(1)
 		rest = last
-		while last in string.digits + ";=?":
+		while last in "1234567890;=?":
 			last = stream.read(1)
 			rest += last
 		if rest == "A":
