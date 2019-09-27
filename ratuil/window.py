@@ -1,6 +1,7 @@
 
 from .constants import INT_INFINITY
 from .drawtarget import DrawTarget
+from .strwidth import crop
 
 class Window(DrawTarget):
 	
@@ -14,7 +15,7 @@ class Window(DrawTarget):
 	def write(self, x, y, text, style=None):
 		if x < 0 or y < 0 or y >= self.height:
 			raise IndexError("Trying to write outside window")
-		text = text[:self.width - x]
+		text = crop(text, self.width - x)
 		self.target.write(self.x + x, self.y + y, text, style)
 	
 	def clear(self):
