@@ -1,7 +1,7 @@
 
 from . import Widget
 from ..textstyle import TextStyle
-from ..strwidth import strwidth
+from ..strwidth import crop, strwidth
 import math
 
 class Fill(Widget):
@@ -17,7 +17,7 @@ class Fill(Widget):
 	
 	def draw(self, target):
 		target.clear()
-		line = (self.char * math.ceil(target.width / strwidth(self.char)))[:target.width]
+		line = crop(self.char * math.ceil(target.width / strwidth(self.char)), target.width)
 		for y in range(target.height):
 			target.write(0, y, line, self.style)
 	

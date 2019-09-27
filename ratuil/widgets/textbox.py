@@ -1,6 +1,6 @@
 
 from . import Widget
-from ..strwidth import wrap, wrap_words
+from ..strwidth import crop, wrap, wrap_words
 from collections import defaultdict
 
 class TextBox(Widget):
@@ -30,7 +30,7 @@ class TextBox(Widget):
 		target.clear()
 		lines = []
 		if self.wrap == "crop":
-			lines = [line[:target.width] for line in self.lines][:target.height]
+			lines = [crop(line, target.width) for line in self.lines][:target.height]
 		elif self.wrap == "chars":
 			for line in self.lines:
 				lines.extend(wrap(line, target.width))

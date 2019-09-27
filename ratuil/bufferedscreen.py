@@ -75,7 +75,7 @@ class RememberingScreen(DrawTarget):
 		self.out.flush()
 	
 	def write(self, x, y, text, style=None):
-		text = text[:self.screen.width-x]
+		text = crop(text, self.screen.width-x)
 		self.on_screen.write(x, y, text, style)
 		#self.screen.write(x, y, text, style)
 		self.screen.move(x, y)
