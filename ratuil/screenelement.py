@@ -23,6 +23,6 @@ class ScreenElement:
 		self.widget.resize(target)
 	
 	def update(self, force):
-		if self.target:# and not self.hidden:
+		if self.target and not self.hidden:
 			return self.widget.update(self.target, force)
 		return False
