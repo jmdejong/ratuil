@@ -13,11 +13,10 @@ Ratuil was originally created with [Asciifarm](https://github.com/jmdejong/ascii
 
 This is an example layout:
 
-    
     <?xml version="1.0"?>
     <hbox>
         <vbox width="20" align="right">
-            <bar id="health" height="2" full-char="+" empty-char="-" full-style="fg:7; bg:2" empty-style="fg:7; bg: 1;" total="10" filled="8"></bar>
+            <bar id="health" height="1" full-char="+" empty-char="-" full-style="fg:7; bg:2" empty-style="fg:7; bg: 1;" total="10" filled="8"></bar>
             <switchbox id="menus" selected="equipment" height="50%">
                 <border key="inventory">
                     <listing id="inventory">
@@ -66,12 +65,11 @@ This is an example layout:
 
 On a 80x20 screen it will show this output (but then with colours):
 
-    +---------------------------------------------------------+@ (8/10)             
-    |                                                         |@++++++++++++++++----
-    |                                          +-----------+  |@####################
-    |                                          |hello world|  |@#*cotton underwear #
-    |                                          +-----------+  |@# cotton shirt     #
-    |                                                         |@# jeans            #
+    +---------------------------------------------------------+@++++++++++++++++----
+    |                                                         |@####################
+    |                                          +-----------+  |@#*cotton underwear #
+    |                                          |hello world|  |@# cotton shirt     #
+    |                                          +-----------+  |@# jeans            #
     |                                                         |@# friendship bracel#
     |                                                         |@#                  #
     |                                                         |@#                  #
@@ -81,9 +79,10 @@ On a 80x20 screen it will show this output (but then with colours):
     |                                                         |@                    
     |                                                         |@ This is a great    
     |                                                         |@ place to show some 
-    +---------------------------------------------------------+@ information.       
-                                                               @ Textbox lines are  
-                                                               @ wrapped!           
+    |                                                         |@ information.       
+    +---------------------------------------------------------+@ Textbox lines can  
+                                                               @ be wrapped!        
+                                                               @                    
     Welcome to [game]                                          @                    
     >                                                          @                    
 
