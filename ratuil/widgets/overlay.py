@@ -26,10 +26,10 @@ class Overlay(Widget):
 	
 	def resize(self, target):
 		for child in self.children:
-			x = child.style.offset_x.to_actual_value(target.width)
-			y = child.style.offset_y.to_actual_value(target.height)
-			width = min(child.style.width.to_actual_value(target.width), target.width - x)
-			height = min(child.style.height.to_actual_value(target.height), target.height - y)
+			x = child.style.get_offset_x(target.width)
+			y = child.style.get_offset_y(target.height)
+			width = min(child.style.get_width(target.width), target.width - x)
+			height = min(child.style.get_height(target.height), target.height - y)
 			if child.style.align_right:
 				x = target.width - x - width
 			if child.style.align_bottom:

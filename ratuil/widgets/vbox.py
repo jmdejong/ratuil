@@ -16,7 +16,7 @@ class VBox(SplitBox):
 				child.resize(None)
 				continue
 			height = end - start
-			height = min(height, child.style.height.to_actual_value(target.height, height))
+			height = min(height, child.style.get_height(target.height, height))
 			if height <= 0:
 				child.resize(None)
 				continue

@@ -97,6 +97,7 @@ Some of these are global.
 - key: This is also an identifier, but is only needed to distinguish elements from their siblings. Currently this is only used for children of switchbox or overlay elements.
 - offset-x, offset-y, width, height, align: These are the style attributes. They are used to position elements withing the parent attributes. Currently this is only used for children of hbox, vbox and overlay elements
   - width and height: the width and height of the element. If no width or height is given the element will cover the total available space.
+  - min-width, min-height, max-width, max-height: minimum and maximum values for the sizes.
   - align: whether to align to left, right, top or bottom. Since top-left alignment is the default, only "right" and "bottom" will actually do something. The string can be a combination, for example "right;bottom".
     I will probably change the way this works a bit, and split it into align-hor and align-vert or something like that.
   - offset-x and offset-y: The values between the side of this element and the end of the available size. This is currently only used by children of overlay.
