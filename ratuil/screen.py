@@ -17,19 +17,28 @@ class Attr:
 	REVERSE = "7"
 	CONCEALED = "8"
 	
+	
 	FG_DEFAULT = "39"
 	BG_DEFAULT = "49"
 	
 	FG_COLORS = [str(i) for i in list(range(30, 38)) + list(range(90, 98))]
 	BG_COLORS = [str(i) for i in list(range(40, 48)) + list(range(100, 108))]
+	
+	ATTRS = {
+		TextStyle.BOLD: BOLD,
+		TextStyle.REVERSE: REVERSE,
+		TextStyle.UNDERSCORE: UNDERSCORE,
+		TextStyle.BLINK: BLINK
+	}
 
 class Screen(DrawTarget):
 	
 	
-	def __init__(self, out=sys.stdout):
+	def __init__(self, out=sys.stdout, always_reset=False):
 		self.out = out
 		self.width = 0
 		self.height = 0
+		self.always_reset = always_reset # always reset if the style is different than the previous one
 		self.update_size()
 	
 	def update_size(self):
@@ -50,20 +59,22 @@ class Screen(DrawTarget):
 			return
 		parts = []
 		reset = False
-		# todo: generalize this
-		if style.fg is None or style.bg is None or previous is None or previous.bold and not style.bold or previous.underscore and not style.underscore or previous.reverse and not style.reverse:
+		if style.fg is None or style.bg is None or previous is None or previous != style and self.always_reset:
 			parts.append(Attr.RESET)
 			reset = True
+		else :
+			for attr, enabled in style.attr.items():
+				if not enabled and previous.attr[attr]:
+					parts.append(Attr.RESET)
+					reset = True
 		if style.fg is not None and (reset or style.fg != previous.fg):
 			parts.append(Attr.FG_COLORS[style.fg])
 		if style.bg is not None and (reset or style.bg != previous.bg):
 			parts.append(Attr.BG_COLORS[style.bg])
-		if style.bold and (reset or not previous.bold):
-			parts.append(Attr.BOLD)
-		if style.underscore and (reset or not previous.underscore):
-			parts.append(Attr.UNDERSCORE)
-		if style.reverse and (reset or not previous.reverse):
-			parts.append(Attr.REVERSE)
+			
+		for attr, enabled in style.attr.items():
+			if enabled and (reset or not previous.attr[attr]):
+				parts.append(Attr.ATTRS[attr])
 		ansistyle = "\033[" + ";".join(parts) + "m"
 		self.out.write(ansistyle)
 	

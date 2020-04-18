@@ -13,8 +13,8 @@ from .strwidth import charwidth
 
 class BufferedScreen(DrawTarget):
 	
-	def __init__(self, out=sys.stdout):
-		self.screen = RememberingScreen(out)
+	def __init__(self, out=sys.stdout, *args, **kwargs):
+		self.screen = RememberingScreen(out, *args, **kwargs)
 		self.buff = Pad(self.screen.width, self.screen.height)
 	
 	@property
@@ -46,9 +46,9 @@ class BufferedScreen(DrawTarget):
 
 class RememberingScreen(DrawTarget):
 	
-	def __init__(self, out=sys.stdout):
+	def __init__(self, out=sys.stdout, *args, **kwargs):
 		self.out = out
-		self.screen = Screen(io.StringIO())
+		self.screen = Screen(io.StringIO(), *args, **kwargs)
 		self.on_screen = Pad(self.screen.width, self.screen.height)
 		self.style = None
 	

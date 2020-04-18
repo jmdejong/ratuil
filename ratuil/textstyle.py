@@ -74,6 +74,7 @@ class TextStyle:
 	BOLD = "bold"
 	REVERSE = "reverse"
 	UNDERSCORE = "underscore"
+	BLINK = "blink"
 	
 	ATTRIBUTES = [BOLD, REVERSE, UNDERSCORE]
 	

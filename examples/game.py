@@ -16,20 +16,27 @@ import tty
 import sys
 import termios
 import os
+import sys
 
+args = set(sys.argv[1:])
 
-sprites = {
-	"floor": ("＿", TextStyle(3)),
-	"wall": ("Ｘ", TextStyle(7,8)),
-	"coin": ("ｃ", TextStyle(11)),
-	"player": ("}{", TextStyle(12))#"＠", TextStyle(12))
-}
-#sprites = {
-	#"floor": ("_", TextStyle(3)),
-	#"wall": ("x", TextStyle(7,8)),
-	#"coin": ("c", TextStyle(11)),
-	#"player": ("@", TextStyle(12))
-#}
+halfwidth = "half" in args
+reset = "reset" in args
+
+if not halfwidth:
+	sprites = {
+		"floor": ("＿", TextStyle(3)),
+		"wall": ("Ｘ", TextStyle(7,8)),
+		"coin": ("ｃ", TextStyle(11)),
+		"player": ("}{", TextStyle(12))#"＠", TextStyle(12))
+	}
+else:
+	sprites = {
+		"floor": ("_", TextStyle(3)),
+		"wall": ("x", TextStyle(7,8)),
+		"coin": ("c", TextStyle(11)),
+		"player": ("@", TextStyle(12))
+	}
 
 generated_objects = {
 	"floor": 75,
@@ -57,7 +64,6 @@ class Field:
 					obj = "floor"
 				else:
 					obj, = random.choices(*objectweights)
-					#print(obj)
 				self.cells[(x, y)] = obj
 	
 	def get(self, x, y):
@@ -113,7 +119,7 @@ def draw(layout, field):
 	
 
 def main():
-	scr = BufferedScreen()
+	scr = BufferedScreen(always_reset=reset)
 	scr.clear()
 	
 	layoutfile = os.path.join(os.path.dirname(__file__), "game.xml")
@@ -133,9 +139,7 @@ def main():
 		if hasattr(scr, "update"):
 			scr.update()
 		inp = get_key(do_interrupt=True)
-		#if inp == "^C":
-			#break
-		layout.get("messages").add_message(str(ord(inp[0])) + ": " + inp)
+		layout.get("messages").add_message(str(inp))
 		field.update(inp)
 
 
