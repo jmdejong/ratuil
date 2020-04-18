@@ -20,10 +20,8 @@ import sys
 
 args = set(sys.argv[1:])
 
-halfwidth = "half" in args
-reset = "reset" in args
 
-if not halfwidth:
+if not "half" in args:
 	sprites = {
 		"floor": ("＿", TextStyle(3)),
 		"wall": ("Ｘ", TextStyle(7,8)),
@@ -119,7 +117,7 @@ def draw(layout, field):
 	
 
 def main():
-	scr = BufferedScreen(always_reset=reset)
+	scr = BufferedScreen(always_reset="reset" in args, blink_bright_background = "bbg" in args)
 	scr.clear()
 	
 	layoutfile = os.path.join(os.path.dirname(__file__), "game.xml")

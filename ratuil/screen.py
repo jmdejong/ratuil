@@ -34,11 +34,12 @@ class Attr:
 class Screen(DrawTarget):
 	
 	
-	def __init__(self, out=sys.stdout, always_reset=False):
+	def __init__(self, out=sys.stdout, always_reset=False, blink_bright_background=False):
 		self.out = out
 		self.width = 0
 		self.height = 0
-		self.always_reset = always_reset # always reset if the style is different than the previous one
+		self.blink_bright_background = blink_bright_background # use the blink attribute for bright backgrounds
+		self.always_reset = always_reset or blink_bright_background # always reset if the style is different than the previous one
 		self.update_size()
 	
 	def update_size(self):
@@ -71,7 +72,8 @@ class Screen(DrawTarget):
 			parts.append(Attr.FG_COLORS[style.fg])
 		if style.bg is not None and (reset or style.bg != previous.bg):
 			parts.append(Attr.BG_COLORS[style.bg])
-			
+			if style.bg > 7 and self.blink_bright_background:
+				parts.append(Attr.BLINK)
 		for attr, enabled in style.attr.items():
 			if enabled and (reset or not previous.attr[attr]):
 				parts.append(Attr.ATTRS[attr])
