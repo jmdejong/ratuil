@@ -97,6 +97,8 @@ class TextStyle:
 		return "TextStyle({}, {}, {})".format(self.fg, self.bg, ", ".join(self.attr.values()))
 	
 	def add(self, other):
+		if other is None:
+			other = TextStyle()
 		fg = self.fg
 		if other.fg is not None:
 			fg = other.fg
@@ -104,7 +106,7 @@ class TextStyle:
 		if other.bg is not None:
 			bg = other.bg
 		attrs = dict(self.attr)
-		for key, val in other.attr:
+		for key, val in other.attr.items():
 			if val:
 				attrs[key] = val
 		return TextStyle(fg, bg, **attrs)

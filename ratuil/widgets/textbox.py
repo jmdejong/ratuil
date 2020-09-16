@@ -12,10 +12,11 @@ class TextBox(Widget):
 		assert wrap in {"crop", "words", "chars"}
 		self.wrap = wrap
 		self.use_format = use_format
-		self.set_text(text)
+		self.set_text(text, None)
 	
-	def set_text(self, text):
+	def set_text(self, text, style=None):
 		self.text = text
+		self.style = style
 		if self.use_format:
 			self.format(defaultdict(str))
 		else:
@@ -39,7 +40,7 @@ class TextBox(Widget):
 				lines.extend(wrap_words(line, target.width))
 		
 		for y, line in enumerate(lines[:target.height]):
-			target.write(0, y, line)
+			target.write(0, y, line, self.style)
 	
 	@classmethod
 	def from_xml(cls, children, attr, text):
