@@ -1,11 +1,12 @@
 
 from . import Widget
 from ..strwidth import crop, wrap, wrap_words
+from ..textstyle import TextStyle
 from collections import defaultdict
 
 class TextBox(Widget):
 	
-	def __init__(self, text="", wrap=None, use_format=False):
+	def __init__(self, text="", wrap=None, use_format=False, style=None):
 		self.lines = []
 		if wrap is None or wrap == "":
 			wrap = "crop"
@@ -46,4 +47,4 @@ class TextBox(Widget):
 	def from_xml(cls, children, attr, text):
 		wrap = attr.get("wrap")
 		use_format = bool(attr.get("format"))
-		return cls((text or "").strip(), wrap, use_format)
+		return cls((text or "").strip(), wrap, use_format, TextStyle.from_str(attr.get("style", "")))
