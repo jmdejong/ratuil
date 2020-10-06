@@ -9,6 +9,9 @@ _whitespace = '\t\n\x0b\x0c\r '
 
 def charwidth(char):
 	""" The width of a single character. Ambiguous width is considered 1"""
+	cat = unicodedata.category(char)
+	if cat == "Mn":
+		return 0
 	eaw = unicodedata.east_asian_width(char)
 	if eaw == "Na" or eaw == "H":
 		return 1
