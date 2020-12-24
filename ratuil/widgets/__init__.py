@@ -5,6 +5,7 @@
 class Widget:
 	
 	_changed = True
+	backend = None
 	
 	def change(self):
 		self._changed = True
@@ -14,6 +15,9 @@ class Widget:
 	
 	def unchange(self):
 		self._changed = False
+	
+	def set_backend(self, backend):
+		self.backend = backend
 	
 	def resize(self, screen):
 		self.change()

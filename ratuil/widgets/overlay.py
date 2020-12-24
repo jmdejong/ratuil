@@ -1,6 +1,5 @@
 
 from . import Widget
-from ..window import Window
 
 class Overlay(Widget):
 	
@@ -34,7 +33,7 @@ class Overlay(Widget):
 				x = target.width - x - width
 			if child.style.align_bottom:
 				y = target.height - y - height
-			win = Window(target, x, y, width, height)
+			win = self.backend.create_window(target, x, y, width, height)
 			child.resize(win)
 	
 	def update(self, target, force):

@@ -1,6 +1,5 @@
 
 from .splitbox import SplitBox
-from ..window import Window
 
 class HBox(SplitBox):
 	
@@ -18,9 +17,9 @@ class HBox(SplitBox):
 			width = end - start
 			width = min(width, child.style.get_width(target.width, width))
 			if child.style.align_right:
-				win = Window(target, end - width, 0, width, target.height)
+				win = self.backend.create_window(target, end - width, 0, width, target.height)
 				end -= width
 			else:
-				win = Window(target, start, 0, width, target.height)
+				win = self.backend.create_window(target, start, 0, width, target.height)
 				start += width
 			child.resize(win)

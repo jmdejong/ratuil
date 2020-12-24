@@ -1,6 +1,5 @@
 
 from . import Widget
-from ..pad import Pad
 
 class Field(Widget):
 	
@@ -9,13 +8,17 @@ class Field(Widget):
 		self.width = width
 		self.height = height
 		self.char_size = char_size
-		self.pad = Pad(self.width * self.char_size, self.height)
+		self.pad = None
 		self.center = (0, 0)
 		self.redraw = False
 	
+	def set_backend(self, backend):
+		self.backend = backend
+		self.pad = self.backend.create_pad(self.width * self.char_size, self.height)
+	
 	def set_char_size(self, char_size):
 		self.char_size = char_size
-		self.pad = Pad(self.width * self.char_size, self.height)
+		self.pad = self.backend.create_pad(self.width * self.char_size, self.height)
 	
 	def set_size(self, width, height):
 		self.width = width

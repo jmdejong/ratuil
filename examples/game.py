@@ -1,11 +1,8 @@
 #!/usr/bin/env -S python3
 
 
-from ratuil.bufferedscreen import BufferedScreen
-from ratuil.screen import Screen
-from ratuil.layout import Layout
+from ratuil.targets.ansibuffered import DrawBackend
 from ratuil.textstyle import TextStyle
-from ratuil.pad import Pad
 from ratuil.inputs import get_key
 
 
@@ -116,12 +113,12 @@ def draw(layout, field):
 	layout.update()
 	
 
-def main():
-	scr = BufferedScreen(always_reset="reset" in args, blink_bright_background = "bbg" in args)
+def main(backend):
+	scr = backend.create_screen(always_reset="reset" in args, blink_bright_background = "bbg" in args)
 	scr.clear()
 	
 	layoutfile = os.path.join(os.path.dirname(__file__), "game.xml")
-	layout = Layout.from_xml_file(layoutfile)
+	layout = backend.layout_from_xml_file(layoutfile)
 	
 	layout.set_target(scr)
 	layout.update(force=True)
@@ -142,18 +139,15 @@ def main():
 
 
 if __name__ == "__main__":
-	fd = sys.stdin.fileno()
-	oldterm = termios.tcgetattr(fd)
+	backend = DrawBackend()
 	exitreason = None
 	try:
-		tty.setraw(sys.stdin)
-		Screen.default.hide_cursor()
-		main()
+		backend.initialize_terminal()
+		main(backend)
 	except KeyboardInterrupt:
 		exitreason = "^C caught, goodbye"
 	finally:
-		termios.tcsetattr(fd, termios.TCSADRAIN, oldterm)
-		Screen.default.finalize()
+		backend.finalize_terminal()
 	if exitreason:
-		Screen.default.move(0, Screen.default.height-2)
+		#Screen.default.move(0, Screen.default.height-2)
 		print(exitreason)

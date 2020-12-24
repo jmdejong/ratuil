@@ -3,10 +3,10 @@ from . import Widget
 from ..textstyle import TextStyle
 from ..strwidth import strwidth
 
-class Border(Widget):
+class Frame(Widget):
 	
 	
-	def __init__(self, child, attr):
+	def __init__(self, attr):
 		self.child = child
 		self.vertchar = "|"
 		self.horchar = "-"
@@ -24,20 +24,6 @@ class Border(Widget):
 		assert strwidth(self.vertchar) == 1
 		assert strwidth(self.cornerchar) == 1
 	
-	def resize(self, target):
-		if target is None:
-			self.child.resize(None)
-		else:
-			win = self.backend.create_window(target, 1, 1, target.width - 2, target.height - 2)
-			self.child.resize(win)
-			self.change()
-	
-	def update(self, target, force=False):
-		if self.is_changed() or force:
-			self.draw(target)
-			force = True
-			self.unchange()
-		return self.child.update(force) or force
 		
 	def draw(self, target):
 		target.write(0, 0, self.cornerchar + self.horchar * (target.width - 2) + self.cornerchar, self.style)
@@ -48,6 +34,5 @@ class Border(Widget):
 
 	@classmethod
 	def from_xml(cls, children, attr, text):
-		assert len(children) == 1
-		return cls(children[0], attr)
+		return cls(attr)
 	

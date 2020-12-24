@@ -1,6 +1,5 @@
 
 from .splitbox import SplitBox
-from ..window import Window
 
 class VBox(SplitBox):
 	
@@ -21,9 +20,9 @@ class VBox(SplitBox):
 				child.resize(None)
 				continue
 			if child.style.align_bottom:
-				win = Window(target, 0, end - height, target.width, height)
+				win = self.backend.create_window(target, 0, end - height, target.width, height)
 				end -= height
 			else:
-				win = Window(target, 0, start, target.width, height)
+				win = self.backend.create_window(target, 0, start, target.width, height)
 				start += height
 			child.resize(win)
