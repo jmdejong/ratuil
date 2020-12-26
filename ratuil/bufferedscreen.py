@@ -2,20 +2,41 @@
 
 import sys
 import io
+import shutil
+import tty
+import termios
 
 from .constants import INT_INFINITY
-from .screen import Screen
+from .ansiscreen import AnsiScreen
 from .pad import Pad
+from .basescreen import BaseScreen
 from .drawtarget import DrawTarget
 from .strwidth import charwidth
 
 
 
-class BufferedScreen(DrawTarget):
+class BufferedScreen(BaseScreen):
 	
 	def __init__(self, out=sys.stdout, *args, **kwargs):
 		self.screen = RememberingScreen(out, *args, **kwargs)
 		self.buff = Pad(self.screen.width, self.screen.height)
+		self.fd = None
+		self.oldterm = None
+	
+	def initialize_terminal(self):
+		self.fd = sys.stdin.fileno()
+		self.oldterm = termios.tcgetattr(self.fd)
+		tty.setraw(sys.stdin)
+		self.screen.screen.hide_cursor()
+	
+	def finalize_terminal(self):
+		if self.oldterm is not None and self.fd is not None:
+			termios.tcsetattr(self.fd, termios.TCSADRAIN, self.oldterm)
+		self.screen.screen.finalize()
+		self.screen.update()
+	
+	def create_pad(self, width, height):
+		return Pad(width, height)
 	
 	@property
 	def width(self):
@@ -48,10 +69,9 @@ class RememberingScreen(DrawTarget):
 	
 	def __init__(self, out=sys.stdout, *args, **kwargs):
 		self.out = out
-		self.screen = Screen(io.StringIO(), *args, **kwargs)
+		self.screen = AnsiScreen(io.StringIO(), *args, **kwargs)
 		self.on_screen = Pad(self.screen.width, self.screen.height)
 		self.style = None
-	
 	
 	@property
 	def width(self):
@@ -205,3 +225,9 @@ class RememberingScreen(DrawTarget):
 							#postpost_run += buff_char
 							#break
 		#self.on_screen.draw_pad(pad, dest_x, dest_y, width, height, src_x, src_y)
+
+
+
+
+Screen = BufferedScreen
+

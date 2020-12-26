@@ -1,9 +1,11 @@
 #!/usr/bin/env -S python3
 
-
-from ratuil.targets.ansibuffered import DrawBackend
+#from ratuil.bufferedscreen import Screen
+#from ratuil.ansiscreen import Screen
+from ratuil.cursedscreen import Screen
 from ratuil.textstyle import TextStyle
 from ratuil.inputs import get_key
+from ratuil.layout import Layout
 
 
 import shutil
@@ -114,40 +116,34 @@ def draw(layout, field):
 	
 
 def main(backend):
-	scr = backend.create_screen(always_reset="reset" in args, blink_bright_background = "bbg" in args)
-	scr.clear()
-	
 	layoutfile = os.path.join(os.path.dirname(__file__), "game.xml")
-	layout = backend.layout_from_xml_file(layoutfile)
+	layout = Layout.from_xml_file(screen, layoutfile)
 	
-	layout.set_target(scr)
 	layout.update(force=True)
 	
-	signal.signal(signal.SIGWINCH, (lambda signum, frame: scr.reset()))
-	
+	signal.signal(signal.SIGWINCH, (lambda signum, frame: (screen.reset(), layout.update())))
 	
 	layout.get("input").set_text("hello", 5)
 	
 	field = Field(200, 40)
 	while True:
 		draw(layout, field)
-		if hasattr(scr, "update"):
-			scr.update()
+		screen.update()
 		inp = get_key(do_interrupt=True)
 		layout.get("messages").add_message(str(inp))
 		field.update(inp)
 
 
 if __name__ == "__main__":
-	backend = DrawBackend()
+	screen = Screen()
 	exitreason = None
 	try:
-		backend.initialize_terminal()
-		main(backend)
+		screen.initialize_terminal()
+		main(screen)
 	except KeyboardInterrupt:
 		exitreason = "^C caught, goodbye"
 	finally:
-		backend.finalize_terminal()
+		screen.finalize_terminal()
 	if exitreason:
 		#Screen.default.move(0, Screen.default.height-2)
 		print(exitreason)

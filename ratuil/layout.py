@@ -39,28 +39,22 @@ widgets = {
 
 class Layout:
 	
-	def __init__(self, backend, tree, basepath=""):
+	def __init__(self, target, tree):
 		
-		self.backend = backend
-		self.tree = tree
 		self.id_elements = {}
 		self.changed = True
-		self.target = None
-		self.layout = self.build_layout(self.tree)
+		self.target = target
 		self._target_size = None
+		self.layout = self.build_layout(tree)
 		
 	def build_layout(self, etree):
 		children = [self.build_layout(child) for child in etree]
 		widget = widgets[etree.tag].from_xml(children, etree.attrib, etree.text)
-		widget.set_backend(self.backend)
+		widget.set_backend(self.target)
 		se = ScreenElement(widget, etree.attrib)
 		if se.id is not None:
 			self.id_elements[se.id] = se
 		return se
-	
-	def set_target(self, target):
-		self.target = target
-		self.resize()
 	
 	def resize(self):
 		self.layout.resize(self.target)
@@ -79,12 +73,10 @@ class Layout:
 		return self.id_elements.get(id).widget
 	
 	@classmethod
-	def from_xml_str(cls, backend, string, basepath=""):
-		return cls(backend, ET.fromstring(string), basepath)
+	def from_xml_str(cls, target, string):
+		return cls(target, ET.fromstring(string))
 	
 	@classmethod
-	def from_xml_file(cls, backend, fname, basepath=None):
-		if basepath is None:
-			basepath = os.path.dirname(fname)
-		return cls(backend, ET.parse(fname).getroot(), basepath)
+	def from_xml_file(cls, target, fname):
+		return cls(target, ET.parse(fname).getroot())
 	

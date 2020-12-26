@@ -1,11 +1,15 @@
 
 import sys
 import shutil
+import tty
+import termios
 
 from .constants import INT_INFINITY
 from .drawtarget import DrawTarget
 from .textstyle import TextStyle
 from .strwidth import charwidth
+from .basescreen import BaseScreen
+from .pad import Pad
 
 
 class Attr:
@@ -31,7 +35,7 @@ class Attr:
 		TextStyle.BLINK: BLINK
 	}
 
-class Screen(DrawTarget):
+class AnsiScreen(BaseScreen):
 	
 	
 	def __init__(self, out=sys.stdout, always_reset=False, blink_bright_background=False):
@@ -41,6 +45,22 @@ class Screen(DrawTarget):
 		self.blink_bright_background = blink_bright_background # use the blink attribute for bright backgrounds
 		self.always_reset = always_reset or blink_bright_background # always reset if the style is different than the previous one
 		self.update_size()
+		self.fd = None
+		self.oldterm = None
+	
+	def initialize_terminal(self):
+		self.fd = sys.stdin.fileno()
+		self.oldterm = termios.tcgetattr(self.fd)
+		tty.setraw(sys.stdin)
+		self.hide_cursor()
+	
+	def finalize_terminal(self):
+		if self.oldterm is not None and self.fd is not None:
+			termios.tcsetattr(self.fd, termios.TCSADRAIN, self.oldterm)
+		self.finalize()
+	
+	def create_pad(self, width, height):
+		return Pad(width, height)
 	
 	def update_size(self):
 		size = shutil.get_terminal_size()
@@ -87,6 +107,10 @@ class Screen(DrawTarget):
 	
 	def clear(self):
 		self.out.write("\033[0m\033[2J")
+	
+	def reset(self):
+		self.update_size()
+		self.clear()
 	
 	def clear_line(self):
 		self.out.write("\033[K")
@@ -138,4 +162,4 @@ class Screen(DrawTarget):
 		self.out.flush()
 	
 
-Screen.default = Screen()
+Screen = AnsiScreen

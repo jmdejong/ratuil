@@ -1,6 +1,11 @@
 #!/usr/bin/env -S python3
 
-from ratuil.targets.ansiterm import DrawBackend
+#from ratuil.bufferedscreen import Screen
+#from ratuil.ansiscreen import Screen
+from ratuil.cursedscreen import Screen
+from ratuil.layout import Layout
+from ratuil.inputs import get_key
+import time
 
 layoutstring = """\
 <?xml version="1.0"?>
@@ -55,15 +60,16 @@ Textbox lines can be wrapped!
 """
 
 def main():
-	backend = DrawBackend()
-	layout = backend.layout_from_xml_str(layoutstring)
-	
-	screen = backend.create_screen()
-	screen.clear()
-	layout.set_target(screen)
-	layout.update()
-	screen.update()
-	screen.finalize()
+	target = Screen()
+	try:
+		target.initialize_terminal()
+		target.clear()
+		layout = Layout.from_xml_str(target, layoutstring)
+		layout.update()
+		target.update()
+		get_key()
+	finally:
+		target.finalize_terminal()
 	print()
 
 
