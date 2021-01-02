@@ -38,7 +38,7 @@ class Attr:
 class AnsiScreen(BaseScreen):
 	
 	
-	def __init__(self, out=sys.stdout, always_reset=False, blink_bright_background=False):
+	def __init__(self, out=sys.stdout, always_reset=False, blink_bright_background=False, **_kwargs):
 		self.out = out
 		self.width = 0
 		self.height = 0

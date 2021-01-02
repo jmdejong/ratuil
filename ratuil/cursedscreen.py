@@ -61,6 +61,9 @@ class Colours:
 
 class CursedScreen(BaseScreen):
 	
+	def __init__(self, **_kwargs):
+		pass
+	
 	def initialize_terminal(self):
 		# Initialize curses
 		self.screen = curses.initscr()
