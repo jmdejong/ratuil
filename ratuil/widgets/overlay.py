@@ -43,11 +43,11 @@ class Overlay(Widget):
 		children = [child for child in self.children if not child.hidden]
 		if not children:
 			return False
-		#child[0].update(force)
 		for child in self.children:
 			# if any child is changed, all next children get forced updates
-			force = child.update(force) or force
-		#self.children[self.selected].update(force)
+			if child.update(force):
+				force = True
+				self.backend.update()
 		return force
 	
 	
