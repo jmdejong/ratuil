@@ -160,28 +160,39 @@ This could also be used to make a separator line within an hbox or vbox.
 
 ## Usage
 
-
+	# pick one of these 3 import for a screen
+	# curses is recommended: it is the lightest and most efficient
+	#from ratuil.bufferedscreen import Screen
+	#from ratuil.ansiscreen import Screen
+	from ratuil.cursedscreen import Screen
+	
 	from ratuil.layout import Layout
-	from ratuil.bufferedscreen import BufferedScreen
 	
-	screen = BufferedScreen() // Make the screen. BufferedScreen is recommended, but other DrawTargets can be used too.
-	screen.clear()
+	screen = BufferedScreen() // Make the screen
+	
+	try:
+		# always initialize the terminal before trying to do something with the screen 
+		screen.initialize_terminal()
+		
+		screen.clear()
 
-	layout = Layout.from_xml_file("layout.xml") // Load the layout from xml. This assumes that there is the file "layout.xml" in the current directory
-	
-	layout.set_target(screen) // Tell the layout that the screen is its target
-	layout.update() // Draw the layout to the buffered screen
-	screen.update() // Draw the buffer to the terminal
-	
-	
-	// change something:
-	log = layout.get("messages") // get the element with id "messages". For this example this is a log element.
-	log.add_message("hello world") // add a new message to the log
-	
-	
-	// draw again
-	layout.update()
-	screen.update()
+		layout = Layout.from_xml_file(screen, "layout.xml") // Load the layout from xml. This assumes that there is the file "layout.xml" in the current directory
+		
+		layout.update() // Draw the layout to the buffered screen
+		screen.update() // Draw the buffer to the terminal
+		
+		// change something:
+		log = layout.get("messages") // get the element with id "messages". For this example this is a log element.
+		log.add_message("hello world") // add a new message to the log
+		
+		// draw again
+		layout.update()
+		screen.update()
+	finally:
+		# Always finalize the terminal.
+		# This should be done from a finally block whose try block encompasses all usage of screen.
+		# Failure to call this can leave the terminal in a weird state (no echoing, no cursor etc.)
+		screen.finalize_terminal()
 
 ## Considerations
 
