@@ -35,6 +35,9 @@ class BufferedScreen(BaseScreen):
 		self.screen.screen.finalize()
 		self.screen.update()
 	
+	def get_key(self):
+		return self.screen.screen.get_key()
+	
 	def create_pad(self, width, height):
 		return Pad(width, height)
 	

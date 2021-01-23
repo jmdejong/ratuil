@@ -8,9 +8,22 @@ from .basescreen import BaseScreen
 from .textstyle import TextStyle as Style
 from .strwidth import charwidth
 from .cursedpad import CursedPad
+from .import inputs
 
 
-
+key_mappings = {
+	curses.KEY_UP: inputs.UP,
+	curses.KEY_DOWN: inputs.DOWN,
+	curses.KEY_LEFT: inputs.LEFT,
+	curses.KEY_RIGHT: inputs.RIGHT,
+	curses.KEY_BACKSPACE: inputs.BACKSPACE,
+	curses.KEY_HOME: inputs.HOME,
+	curses.KEY_END: inputs.END,
+	curses.KEY_PPAGE: inputs.PAGEUP,
+	curses.KEY_NPAGE: inputs.PAGEDOWN,
+	curses.KEY_DC: inputs.DELETE,
+	curses.KEY_IC: inputs.INSERT,
+}
 
 class Colours:
 	
@@ -109,7 +122,13 @@ class CursedScreen(BaseScreen):
 		curses.echo()
 		curses.nocbreak()
 		curses.endwin()
-		
+	
+	def get_key(self):
+		key = self.screen.getch()
+		if key in key_mappings:
+			return key_mappings[key]
+		return inputs.name_char(key)
+	
 	def create_pad(self, width, height):
 		return CursedPad(self.screen, self.colours, width, height)
 	

@@ -129,7 +129,7 @@ def main(backend):
 	while True:
 		draw(layout, field)
 		screen.update()
-		inp = get_key(do_interrupt=True)
+		inp = screen.get_key()
 		layout.get("messages").add_message(str(inp))
 		field.update(inp)
 

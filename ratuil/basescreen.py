@@ -19,6 +19,9 @@ class BaseScreen(DrawTarget):
 	def finalize_terminal(self):
 		raise NotImplementedError()
 
+	def get_key(self):
+		raise NotImplementedError()
+
 	def update_size(self):
 		raise NotImplementedError()
 		

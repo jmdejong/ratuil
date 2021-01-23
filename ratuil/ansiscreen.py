@@ -10,6 +10,7 @@ from .textstyle import TextStyle
 from .strwidth import charwidth
 from .basescreen import BaseScreen
 from .pad import Pad
+from .inputs import get_key
 
 
 class Attr:
@@ -38,8 +39,9 @@ class Attr:
 class AnsiScreen(BaseScreen):
 	
 	
-	def __init__(self, out=sys.stdout, always_reset=False, blink_bright_background=False, **_kwargs):
+	def __init__(self, out=sys.stdout, always_reset=False, blink_bright_background=False, keyin=sys.stdin, **_kwargs):
 		self.out = out
+		self.keyin = keyin
 		self.width = 0
 		self.height = 0
 		self.blink_bright_background = blink_bright_background # use the blink attribute for bright backgrounds
@@ -54,10 +56,14 @@ class AnsiScreen(BaseScreen):
 		tty.setraw(sys.stdin)
 		self.hide_cursor()
 	
+	
 	def finalize_terminal(self):
 		if self.oldterm is not None and self.fd is not None:
 			termios.tcsetattr(self.fd, termios.TCSADRAIN, self.oldterm)
 		self.finalize()
+	
+	def get_key(self):
+		return get_key()
 	
 	def create_pad(self, width, height):
 		return Pad(width, height)
